@@ -55,8 +55,8 @@ public class EscenaAcercaDe extends EscenaBase
         menu.setBackgroundEnabled(false);
 
 
-        opcionHistoria.setPosition(0,-100);
-        opcionCreditos.setPosition(0, 0);
+        opcionHistoria.setPosition(0,50);
+        opcionCreditos.setPosition(0, -300);
 
 
         menu.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
