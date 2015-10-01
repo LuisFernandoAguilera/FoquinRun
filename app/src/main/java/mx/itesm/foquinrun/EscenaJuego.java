@@ -1,7 +1,9 @@
 package mx.itesm.foquinrun;
 
+import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.TiledTextureRegion;
 
 
 public class EscenaJuego extends EscenaBase {
@@ -10,10 +12,14 @@ public class EscenaJuego extends EscenaBase {
     private ITextureRegion regionFondo;
     // Sprite para el fondo
     private Sprite spriteFondo;
+    private AnimatedSprite foquin;
+    private TiledTextureRegion regionfoquin;
 
     @Override
     public void cargarRecursos() {
         regionFondo = cargarImagen("Prueba/Juego.png");
+        
+
     }
 
     @Override
