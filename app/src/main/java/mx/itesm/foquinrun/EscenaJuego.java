@@ -12,20 +12,26 @@ public class EscenaJuego extends EscenaBase {
     private ITextureRegion regionFondo;
     // Sprite para el fondo
     private Sprite spriteFondo;
-    private AnimatedSprite foquin;
-    private TiledTextureRegion regionfoquin;
+
+    private AnimatedSprite spriteFoquin;
+    private TiledTextureRegion regionFoquin;
 
     @Override
     public void cargarRecursos() {
         regionFondo = cargarImagen("Prueba/Juego.png");
-        
 
+        //cargarImagenMosaico
     }
 
     @Override
     public void crearEscena() {
         spriteFondo = cargarSprite(ControlJuego.ANCHO_CAMARA/2, ControlJuego.ALTO_CAMARA/2, regionFondo);
         attachChild(spriteFondo);
+        spriteFoquin = new AnimatedSprite(ControlJuego.ALTO_CAMARA/2,
+                ControlJuego.ALTO_CAMARA/2,regionFoquin,
+                actividadJuego.getVertexBufferObjectManager());
+
+
     }
 
     @Override
