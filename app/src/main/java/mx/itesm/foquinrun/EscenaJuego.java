@@ -20,16 +20,20 @@ public class EscenaJuego extends EscenaBase {
     public void cargarRecursos() {
         regionFondo = cargarImagen("Prueba/Juego.png");
 
-        //cargarImagenMosaico
+        regionFoquin= cargarImagenMosaico("Foquin.png",786,277,1,5);
     }
 
     @Override
     public void crearEscena() {
         spriteFondo = cargarSprite(ControlJuego.ANCHO_CAMARA/2, ControlJuego.ALTO_CAMARA/2, regionFondo);
         attachChild(spriteFondo);
+
         spriteFoquin = new AnimatedSprite(ControlJuego.ALTO_CAMARA/2,
                 ControlJuego.ALTO_CAMARA/2,regionFoquin,
                 actividadJuego.getVertexBufferObjectManager());
+
+        spriteFoquin.animate(200);
+        attachChild(spriteFoquin);
 
 
     }
@@ -44,6 +48,7 @@ public class EscenaJuego extends EscenaBase {
 
     @Override
     public TipoEscena getTipoEscena() {
+
         return TipoEscena.ESCENA_PANTALLA;
     }
 

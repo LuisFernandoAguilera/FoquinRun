@@ -59,7 +59,7 @@ public abstract class EscenaBase extends Scene
     }
 
 
-    private TiledTextureRegion cargarImagenMosaico(String archivo, int ancho, int alto, int renglones, int columnas) {
+    protected TiledTextureRegion cargarImagenMosaico(String archivo, int ancho, int alto, int renglones, int columnas) {
 // Carga las imágenes para el sprite Animado
         BuildableBitmapTextureAtlas texturaMosaico = new BuildableBitmapTextureAtlas(actividadJuego.getTextureManager(),ancho,alto);
         TiledTextureRegion region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(texturaMosaico, actividadJuego, archivo, columnas, renglones);
@@ -67,7 +67,8 @@ public abstract class EscenaBase extends Scene
             texturaMosaico.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 0, 0));
         } catch (ITextureAtlasBuilder.TextureAtlasBuilderException e) { Log.d("cargarImagenMosaico()", "No se puede cargar la imagen: " + archivo);
         }
-        return region; }
+        return region;
+    }
 
     // Método auxiliar para crear un Sprite.
     protected Sprite cargarSprite(float px, float py, final ITextureRegion regionFondo) {
