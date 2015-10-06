@@ -1,5 +1,6 @@
 package mx.itesm.foquinrun;
 
+import org.andengine.entity.modifier.JumpModifier;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.scene.menu.item.SpriteMenuItem;
@@ -19,6 +20,8 @@ public class EscenaJuego extends EscenaBase {
 
     private AnimatedSprite spriteFoquin;
     private TiledTextureRegion regionFoquin;
+
+
 
 
     private MenuScene menu;
@@ -43,13 +46,15 @@ public class EscenaJuego extends EscenaBase {
         getRegionBotonRojo= cargarImagen("boton.png");
         getGetRegionBotonAzul= cargarImagen("boton.png");
         getGetRegionBotonVerde= cargarImagen("boton.png");
+
+
     }
 
     @Override
     public void crearEscena() {
 
 
-        spriteFondo = cargarSprite(ControlJuego.ANCHO_CAMARA/2, ControlJuego.ALTO_CAMARA/2, regionFondo);
+        spriteFondo = cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionFondo);
         attachChild(spriteFondo);
 
         spriteFoquin = new AnimatedSprite(ControlJuego.ALTO_CAMARA/2,
@@ -60,6 +65,7 @@ public class EscenaJuego extends EscenaBase {
         attachChild(spriteFoquin);
 
         agregarBotonesDeJuego();
+
 
 
     }
@@ -79,20 +85,23 @@ public class EscenaJuego extends EscenaBase {
         menu.addMenuItem(BotonVerde);
         menu.addMenuItem(BotonAzul);
 
+
         menu.buildAnimations();
         menu.setBackgroundEnabled(false);
 
         BotonRojo.setPosition(300, -300);
-        BotonVerde.setPosition(390,-220);
-        BotonAzul.setPosition(420,-80);
+        BotonVerde.setPosition(440,-180);
+        BotonAzul.setPosition(500,0);
 
         menu.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
             public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem,
                                              float pMenuItemLocalX, float pMenuItemLocalY) {
                 // El parámetro pMenuItem indica la opción oprimida
                 switch (pMenuItem.getID()) {
-                    case ROJO:
-
+                    case ROJO://arreglar salto de foquin para no permitir saltar entre saltos
+                        JumpModifier salto = new JumpModifier(1, spriteFoquin.getX(), spriteFoquin.getX(),
+                                spriteFoquin.getY(), spriteFoquin.getY(), -200);
+                        spriteFoquin.registerEntityModifier(salto);
 
                     case VERDE:
 
