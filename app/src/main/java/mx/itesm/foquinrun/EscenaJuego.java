@@ -1,37 +1,62 @@
 package mx.itesm.foquinrun;
 
+import android.view.Menu;
+import android.widget.Switch;
+
+import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.JumpModifier;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.scene.menu.item.SpriteMenuItem;
 import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.AnimatedSprite;
+import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 
 
+import java.util.ArrayList;
+
+
 public class EscenaJuego extends EscenaBase {
 
-    // Regiones para imágenes
+
     private ITextureRegion regionFondo;
-    // Sprite para el fondo
     private Sprite spriteFondo;
+
+    private TiledTextureRegion regionBtnRojo;
+    private TiledTextureRegion regionBtnVerde;
+    private TiledTextureRegion regionBtnAzul;
+
 
     private AnimatedSprite spriteFoquin;
     private TiledTextureRegion regionFoquin;
 
+    private AnimatedSprite spriteFoquinRojo;
+    private TiledTextureRegion regionFoquinRojo;
+
+    private AnimatedSprite spriteFoquinVerde;
+    private TiledTextureRegion regionFoquinVerde;
+
+    private AnimatedSprite spriteFoquinAzul;
+    private TiledTextureRegion regionFoquinAzul;
+
+    private ITextureRegion regionBtnPausa;
+    private final int OPCION_BTN_PAUSA=0;
+    private MenuScene menu2;
+
+    private ArrayList <Plataforma> listaPlataformas;
+    private ITextureRegion regionPlataforma;
+
+    private float tiempoplataformas = 0;
+    private float LIMITE_TIEMPO = 2.5f;
 
 
 
-    private MenuScene menu;
-    private ITextureRegion getRegionBotonRojo;
-    private ITextureRegion getGetRegionBotonVerde;
-    private ITextureRegion getGetRegionBotonAzul;
 
-    private final int ROJO=0;
-    private final int VERDE=1;
-    private final int AZUL=2;
+
 
 
     private boolean foquinSalta=false;
@@ -41,11 +66,20 @@ public class EscenaJuego extends EscenaBase {
     public void cargarRecursos() {
         regionFondo = cargarImagen("Prueba/Juego.png");
 
-        regionFoquin= cargarImagenMosaico("EscenaJuego/Foquin.png", 1000, 277, 1, 5);
+        regionFoquin= cargarImagenMosaico("EscenaJuego/foquin.png", 500, 140, 1, 5);
+        regionFoquinRojo= cargarImagenMosaico("EscenaJuego/FoquinRojo2.png", 500, 140, 1, 5);
+        regionFoquinVerde=cargarImagenMosaico("EscenaJuego/foquinVerde2.png", 500, 140, 1, 5);
+        regionFoquinAzul=cargarImagenMosaico("EscenaJuego/foquinAzul2.png", 500, 140, 1, 5);
 
-        getRegionBotonRojo= cargarImagen("boton.png");
-        getGetRegionBotonAzul= cargarImagen("boton.png");
-        getGetRegionBotonVerde= cargarImagen("boton.png");
+        regionBtnRojo= cargarImagenMosaico("EscenaJuego/Botones/botonRojo2.png",240,120,1,2);
+        regionBtnVerde= cargarImagenMosaico("EscenaJuego/Botones/botonVerde2.png",240,120,1,2);
+        regionBtnAzul= cargarImagenMosaico("EscenaJuego/Botones/botonAzul2.png",240,120,1,2);
+
+
+
+        regionPlataforma= cargarImagen("Prueba/plataforma.png");
+
+        regionBtnPausa= cargarImagen("EscenaJuego/Botones/BotonPausa.png");
 
 
     }
@@ -57,64 +91,89 @@ public class EscenaJuego extends EscenaBase {
         spriteFondo = cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionFondo);
         attachChild(spriteFondo);
 
-        spriteFoquin = new AnimatedSprite(ControlJuego.ALTO_CAMARA/2,
-                ControlJuego.ALTO_CAMARA/2,regionFoquin,
-                actividadJuego.getVertexBufferObjectManager());
+        ButtonSprite btnRojo = new ButtonSprite(0,0,regionBtnRojo,actividadJuego.getVertexBufferObjectManager()){
+            @Override
+            public boolean onAreaTouched(TouchEvent event, float x, float y) {
+                JumpModifier salto = new JumpModifier(1,spriteFoquin.getX(),spriteFoquin.getX(),
+                        spriteFoquin.getY(),spriteFoquin.getY(),-200);
+                spriteFoquin.registerEntityModifier(salto);
+                return super.onAreaTouched(event, x, y);
 
+            }
+        };
+        ButtonSprite btnVerde = new ButtonSprite(0,0,regionBtnVerde,actividadJuego.getVertexBufferObjectManager()){
+            @Override
+            public boolean onAreaTouched(TouchEvent event, float x, float y) {
+                return super.onAreaTouched(event, x, y);
+
+            }
+        };
+        ButtonSprite btnAzul = new ButtonSprite(0,0,regionBtnAzul,actividadJuego.getVertexBufferObjectManager()){
+            @Override
+            public boolean onAreaTouched(TouchEvent event, float x, float y) {
+                return super.onAreaTouched(event, x, y);
+
+            }
+        };
+
+
+        registerTouchArea(btnRojo);
+        attachChild(btnRojo);
+        btnRojo.setPosition(1000, 100);
+
+        registerTouchArea(btnVerde);
+        attachChild(btnVerde);
+        btnVerde.setPosition(1100, 200);
+
+        registerTouchArea(btnAzul);
+        attachChild(btnAzul);
+        btnAzul.setPosition(1200, 300);
+
+
+
+
+        spriteFoquin = new AnimatedSprite(ControlJuego.ALTO_CAMARA / 2,
+                    ControlJuego.ALTO_CAMARA / 2, regionFoquin,
+                    actividadJuego.getVertexBufferObjectManager());
         spriteFoquin.animate(100);
         attachChild(spriteFoquin);
+        spriteFoquin.setPosition(250, 300);
+        spriteFoquin.setScale(2);
 
-        agregarBotonesDeJuego();
+
+        listaPlataformas= new ArrayList<Plataforma>();
+
 
 
 
     }
 
-    private void agregarBotonesDeJuego() {
-        menu = new MenuScene(actividadJuego.camara);
-        menu.setPosition(ControlJuego.ANCHO_CAMARA/2,ControlJuego.ALTO_CAMARA/2);
-
-        final IMenuItem BotonRojo = new ScaleMenuItemDecorator(new SpriteMenuItem(ROJO,
-                getRegionBotonRojo, actividadJuego.getVertexBufferObjectManager()), 1.5f, 1);
-        final IMenuItem BotonVerde = new ScaleMenuItemDecorator(new SpriteMenuItem(VERDE,
-                getGetRegionBotonVerde, actividadJuego.getVertexBufferObjectManager()), 1.5f, 1);
-        IMenuItem BotonAzul = new ScaleMenuItemDecorator(new SpriteMenuItem(AZUL,
-                getRegionBotonRojo, actividadJuego.getVertexBufferObjectManager()), 1.5f, 1);
-
-        menu.addMenuItem(BotonRojo);
-        menu.addMenuItem(BotonVerde);
-        menu.addMenuItem(BotonAzul);
 
 
-        menu.buildAnimations();
-        menu.setBackgroundEnabled(false);
-
-        BotonRojo.setPosition(300, -300);
-        BotonVerde.setPosition(440,-180);
-        BotonAzul.setPosition(500,0);
-
-        menu.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
-            public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem,
-                                             float pMenuItemLocalX, float pMenuItemLocalY) {
-                // El parámetro pMenuItem indica la opción oprimida
-                switch (pMenuItem.getID()) {
-                    case ROJO://arreglar salto de foquin para no permitir saltar entre saltos
-                        JumpModifier salto = new JumpModifier(1, spriteFoquin.getX(), spriteFoquin.getX(),
-                                spriteFoquin.getY(), spriteFoquin.getY(), -200);
-                        spriteFoquin.registerEntityModifier(salto);
-
-                    case VERDE:
+    @Override
+    protected void onManagedUpdate(float pSecondsElapsed) {
+        super.onManagedUpdate(pSecondsElapsed);
 
 
-                    case AZUL:
+
+        tiempoplataformas += pSecondsElapsed;
+        if (tiempoplataformas>LIMITE_TIEMPO) {
+            tiempoplataformas = 0;
+
+            Sprite spritePlataforma = cargarSprite(ControlJuego.ANCHO_CAMARA/2+regionPlataforma.getWidth(),
+                    (float)(Math.random()*ControlJuego.ALTO_CAMARA-regionPlataforma.getHeight()) +
+                            regionPlataforma.getHeight(),regionPlataforma);
+            Plataforma nuevoPlataforma = new Plataforma();
+            nuevoPlataforma.setSprite(spritePlataforma);
+            listaPlataformas.add(nuevoPlataforma);
+            attachChild(nuevoPlataforma.getSpritePlataforma());
+        }
+        
 
 
-                }
-                return true;
-            }
-        });
-        setChildScene(menu);
     }
+
+
 
     @Override
     public void onBackKeyPressed() {

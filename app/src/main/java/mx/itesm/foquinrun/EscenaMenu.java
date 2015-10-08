@@ -10,6 +10,7 @@ import org.andengine.entity.scene.menu.item.SpriteMenuItem;
 import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.util.GLState;
 
@@ -22,48 +23,70 @@ public class EscenaMenu extends EscenaBase
 {
     // Regiones para las imágenes de la escena
     private ITextureRegion regionFondo;
+    private ITextureRegion regionFondoLuz;
+
     private ITextureRegion regionBtnAcercaDe;
     private ITextureRegion regionBtnJugar;
     private ITextureRegion regionBtnBoton;
 
-    // Sprites sobre la escena
-    private Sprite spriteFondo;
+    private ITextureRegion regionBtnAcercaDeLuz;
+    private ITextureRegion regionBtnJugarLuz;
+    private ITextureRegion regionBtnBotonLuz;
 
-    // Un menú de tipo SceneMenu
-    private MenuScene menu;     // Contenedor de las opciones
-    // Constantes para cada opción
+    private Sprite spriteBtnAcercaDeLuz;
+    private Sprite spriteBtnJugareLuz;
+    private Sprite spriteBtnBotonLuz;
+
+    private Sprite spriteFondo;
+    private Sprite spriteFondoLuz;
+
+
+    private MenuScene menu;
+
     private final int OPCION_ACERCA_DE = 0;
     private final int OPCION_JUGAR = 1;
     private final int OPCION_BOTON=2;
 
-    // Botones de cada opción
+
     private ButtonSprite btnAcercaDe;
     private ButtonSprite btnJugar;
     private ButtonSprite btnBoton;
 
     @Override
     public void cargarRecursos() {
-        // Fondo
-        regionFondo = cargarImagen("fondoMenu.jpg");
-        // Botones del menú
-        regionBtnAcercaDe = cargarImagen("btnAcercaDe.png");
-        regionBtnJugar = cargarImagen("btnJugar.png");
-        regionBtnBoton= cargarImagen("boton.png");
+
+        regionFondo = cargarImagen("Menu/fondo objeto.png");
+        regionFondoLuz= cargarImagen("Menu/luz letras y cable.png");
+
+
+        regionBtnAcercaDe = cargarImagen("Menu/opciones boton.png");
+        regionBtnJugar = cargarImagen("Menu/play boton.png");
+        regionBtnBoton= cargarImagen("Menu/mapa boton.png");
+
+        regionBtnAcercaDeLuz= cargarImagen("Menu/luz opciones boton.png");
+        regionBtnJugarLuz= cargarImagen("Menu/luz play boton.png");
+        regionBtnBotonLuz= cargarImagen("Menu/luz mapa boton.png");
+
     }
 
     @Override
     public void crearEscena() {
-        // Creamos el sprite de manera óptima
+        spriteFondoLuz=cargarSprite(ControlJuego.ANCHO_CAMARA/2, ControlJuego.ALTO_CAMARA/2, regionFondoLuz);
         spriteFondo = cargarSprite(ControlJuego.ANCHO_CAMARA/2, ControlJuego.ALTO_CAMARA/2, regionFondo);
 
-        // Crea el fondo de la pantalla
+        attachChild(spriteFondoLuz);
+
         SpriteBackground fondo = new SpriteBackground(1,1,1,spriteFondo);
         setBackground(fondo);
         setBackgroundEnabled(true);
 
-        // Mostrar un recuadro atrás del menú
+        spriteBtnJugareLuz=cargarSprite(ControlJuego.ANCHO_CAMARA/2-400,ControlJuego.ALTO_CAMARA/2-300,regionBtnJugarLuz);
+        attachChild(spriteBtnJugareLuz);
+        spriteBtnBotonLuz=cargarSprite(ControlJuego.ANCHO_CAMARA/2+0,ControlJuego.ALTO_CAMARA/2-300,regionBtnBotonLuz);
+        attachChild(spriteBtnBotonLuz);
+        spriteBtnAcercaDeLuz=cargarSprite(ControlJuego.ANCHO_CAMARA/2+300,ControlJuego.ALTO_CAMARA/2-300,regionBtnAcercaDeLuz);
+        attachChild(spriteBtnAcercaDeLuz);
 
-        // Mostrar opciones de menú
         agregarMenu();
     }
 
@@ -93,11 +116,9 @@ public class EscenaMenu extends EscenaBase
         menu.buildAnimations();
         menu.setBackgroundEnabled(false);   // Completamente transparente
 
-        // Ubicar las opciones DENTRO del menú. El centro del menú es (0,0)
-        opcionAcercaDe.setPosition(300, 0);
-        opcionJugar.setPosition(-300, 0);
-
-        opcionBoton.setPosition(0,0);
+        opcionJugar.setPosition(-400, -300);
+        opcionBoton.setPosition(0,-300);
+        opcionAcercaDe.setPosition(300, -300);
 
 
         // Registra el Listener para atender las opciones
