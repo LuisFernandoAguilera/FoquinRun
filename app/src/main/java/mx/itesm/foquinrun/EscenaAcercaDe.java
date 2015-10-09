@@ -1,13 +1,13 @@
 package mx.itesm.foquinrun;
 
-import android.view.Menu;
-
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.scene.menu.item.SpriteMenuItem;
 import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
+import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.TiledTextureRegion;
 
 /**
  * Created by rmroman on 11/09/15.
@@ -22,6 +22,10 @@ public class EscenaAcercaDe extends EscenaBase
 
     private ITextureRegion regionHistoria;
     private ITextureRegion regionCreditos;
+    private Sprite spriteHistoria;
+
+    private TiledTextureRegion regionBtnHistoria;
+    private TiledTextureRegion regionBtnCreditos;
 
     private final int OPCION_HISTORIA = 0;
     private final int OPCION_CREDITOS=1;
@@ -30,15 +34,23 @@ public class EscenaAcercaDe extends EscenaBase
     public void cargarRecursos() {
         regionFondo = cargarImagen("Prueba/Opciones.png");
 
-        regionHistoria= cargarImagen("boton.png");
-        regionCreditos = cargarImagen("boton.png");
+        regionHistoria= cargarImagen("EscenaAcercaDe/boton.png");
+        regionCreditos = cargarImagen("EscenaAcercaDe/boton.png");
+
+        regionBtnCreditos= cargarImagenMosaico("EscenaAcercaDe/creditos.png", 934, 145, 1, 2);
+        regionBtnHistoria= cargarImagenMosaico("EscenaAcercaDe/Historia.png", 934, 145, 1, 2);
     }
 
     @Override
     public void crearEscena() {
+
         spriteFondo = cargarSprite(ControlJuego.ANCHO_CAMARA/2, ControlJuego.ALTO_CAMARA/2, regionFondo);
         attachChild(spriteFondo);
         agregarMenu();
+
+
+
+
     }
     private void agregarMenu() {
         menu = new MenuScene(actividadJuego.camara);
@@ -48,6 +60,9 @@ public class EscenaAcercaDe extends EscenaBase
                 regionHistoria, actividadJuego.getVertexBufferObjectManager()), 1.5f, 1);
         IMenuItem opcionCreditos = new ScaleMenuItemDecorator(new SpriteMenuItem(OPCION_CREDITOS,
                 regionCreditos, actividadJuego.getVertexBufferObjectManager()), 1.5f, 1);
+        opcionCreditos.setAlpha(0);
+        opcionHistoria.setAlpha(0);
+
         menu.addMenuItem(opcionHistoria);
         menu.addMenuItem(opcionCreditos);
 
