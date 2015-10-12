@@ -64,6 +64,7 @@ public class EscenaJuego extends EscenaBase {
 
     private boolean foquinSalta=false;
     private boolean collionMonoPla=false;
+    
 
 
     @Override
@@ -98,17 +99,15 @@ public class EscenaJuego extends EscenaBase {
 
 
         spriteFondo = cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionFondo);
-        spriteFondoMedio=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionFondoMedio);
+        spriteFondoMedio=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA -250, regionFondoMedio);
         spriteFondoFrente=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionFonodFrente);
 
         AutoParallaxBackground fondoAnimado = new AutoParallaxBackground(1, 1, 1, 5);
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-2, spriteFondo));
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3,spriteFondoMedio));
-        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5,spriteFondoFrente));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteFondoFrente));
         setBackground(fondoAnimado);
 
-
-        listaPlataformas= new ArrayList<Plataforma>();
 
 
         ButtonSprite btnRojo = new ButtonSprite(0,0,regionBtnRojo,actividadJuego.getVertexBufferObjectManager()){
@@ -131,8 +130,6 @@ public class EscenaJuego extends EscenaBase {
                     JumpModifier saltoAzul = new JumpModifier(1, spriteFoquinAzul.getX(), spriteFoquinAzul.getX(),
                             spriteFoquinAzul.getY(), spriteFoquinAzul.getY(), -150);
                     spriteFoquinAzul.registerEntityModifier(saltoAzul);
-
-
                 }
                 if(spriteFoquinRojo.getAlpha()==0){
                     spriteFoquin.setAlpha(0);
@@ -219,6 +216,7 @@ public class EscenaJuego extends EscenaBase {
         attachChild(btnAzul);
         btnAzul.setPosition(1200, 300);
 
+        listaPlataformas= new ArrayList<Plataforma>();
 
         spriteFoquin = new AnimatedSprite(ControlJuego.ALTO_CAMARA / 2,
                     ControlJuego.ALTO_CAMARA / 2, regionFoquin,
@@ -301,7 +299,15 @@ public class EscenaJuego extends EscenaBase {
         for (int i= listaPlataformas.size()-1; i>=0; i--) {
             Plataforma plataforma = listaPlataformas.get(i);
             plataforma.mover(-8, 0);
-            //agregar condicion para que foquin salte en las pltaformas
+            //agregar condicion para que foquin salte en las plataformas
+
+            if(spriteFoquin.collidesWith(plataforma.getSpritePlataforma())){
+
+
+
+            }
+
+
             if (plataforma.getSpritePlataforma().getX() < -plataforma.getSpritePlataforma().getWidth()) {
                 detachChild(plataforma.getSpritePlataforma());
                 listaPlataformas.remove(plataforma);
@@ -317,7 +323,7 @@ public class EscenaJuego extends EscenaBase {
 
     @Override
     public void onBackKeyPressed() {
-        // Regresar al menú principal
+
         admEscenas.crearEscenaMenu();
         admEscenas.setEscena(TipoEscena.ESCENA_MENU);
         admEscenas.liberarEscenaJuego();
