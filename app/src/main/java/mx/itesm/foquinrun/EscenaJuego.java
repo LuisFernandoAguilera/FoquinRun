@@ -50,6 +50,10 @@ public class EscenaJuego extends EscenaBase {
     private AnimatedSprite spriteFoquinAzul;
     private TiledTextureRegion regionFoquinAzul;
 
+    private ITextureRegion regionPlataformaEntrada;
+    private Sprite spritePlataformaEntrada;
+
+
     private ITextureRegion regionBtnPausa;
     private final int OPCION_BTN_PAUSA=0;
     private MenuScene menu2;
@@ -60,11 +64,21 @@ public class EscenaJuego extends EscenaBase {
     private ITextureRegion regionPlataformaAzul;
 
     private float tiempoplataformas = 0;
-    private float LIMITE_TIEMPO = 1.2f;
+    private float LIMITE_TIEMPO = 1.3f;
 
     private boolean foquinSalta=false;
+
+    private boolean foquinCae=true;
+    private boolean foquinCae2=true;
+    private boolean foquinCae3=true;
+    private boolean foquinCae4=false;
+    private int contadorcolision=0;
+
     private boolean collionMonoPla=false;
-    
+    private boolean plataformaSale=false;
+
+
+
 
 
     @Override
@@ -78,9 +92,9 @@ public class EscenaJuego extends EscenaBase {
         regionFoquinVerde=cargarImagenMosaico("EscenaJuego/FoquinVerde.png", 500, 140, 1, 5);
         regionFoquinAzul=cargarImagenMosaico("EscenaJuego/FoquinAzul.png", 500, 140, 1, 5);
 
-        regionBtnRojo= cargarImagenMosaico("EscenaJuego/Botones/botonRojo.png",240,120,1,2);
-        regionBtnVerde= cargarImagenMosaico("EscenaJuego/Botones/botonVerde.png",240,120,1,2);
-        regionBtnAzul= cargarImagenMosaico("EscenaJuego/Botones/botonAzul.png",240,120,1,2);
+        regionBtnRojo= cargarImagenMosaico("EscenaJuego/Botones/botonRojo.png", 240, 120, 1, 2);
+        regionBtnVerde= cargarImagenMosaico("EscenaJuego/Botones/botonVerde.png", 240, 120, 1, 2);
+        regionBtnAzul= cargarImagenMosaico("EscenaJuego/Botones/botonAzul.png", 240, 120, 1, 2);
 
 
 
@@ -88,6 +102,7 @@ public class EscenaJuego extends EscenaBase {
         regionPlataformaVerde= cargarImagen("EscenaJuego/Botones/Plataformas/plataformaVerdePrendida.png");
         regionPlataformaAzul= cargarImagen("EscenaJuego/Botones/Plataformas/plataformaAzulPrendida.png");
 
+        regionPlataformaEntrada=cargarImagen("EscenaJuego/Botones/Plataformas/plataformaEntrada.png");
 
         regionBtnPausa= cargarImagen("EscenaJuego/Botones/BotonPausa.png");
 
@@ -108,12 +123,16 @@ public class EscenaJuego extends EscenaBase {
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteFondoFrente));
         setBackground(fondoAnimado);
 
+        spritePlataformaEntrada=cargarSprite(ControlJuego.ANCHO_CAMARA/2-250,ControlJuego.ALTO_CAMARA/2-410, regionPlataformaEntrada);
+        attachChild(spritePlataformaEntrada);
+        spritePlataformaEntrada.setScale(2);
+
 
 
         ButtonSprite btnRojo = new ButtonSprite(0,0,regionBtnRojo,actividadJuego.getVertexBufferObjectManager()){
             @Override
             public boolean onAreaTouched(TouchEvent event, float x, float y) {
-                if(spriteFoquin.getY()==350) {
+                if(spriteFoquin.getY()==350 ) {
                     spriteFoquin.setAlpha(0);
                     spriteFoquinRojo.setAlpha(1);
                     spriteFoquinVerde.setAlpha(0);
@@ -131,7 +150,8 @@ public class EscenaJuego extends EscenaBase {
                             spriteFoquinAzul.getY(), spriteFoquinAzul.getY(), -150);
                     spriteFoquinAzul.registerEntityModifier(saltoAzul);
                 }
-                if(spriteFoquinRojo.getAlpha()==0){
+
+                if(spriteFoquinRojo.getAlpha()==0){//permite que foquin cambie de color en el aire
                     spriteFoquin.setAlpha(0);
                     spriteFoquinRojo.setAlpha(1);
                     spriteFoquinVerde.setAlpha(0);
@@ -143,7 +163,7 @@ public class EscenaJuego extends EscenaBase {
         ButtonSprite btnVerde = new ButtonSprite(0,0,regionBtnVerde,actividadJuego.getVertexBufferObjectManager()){
             @Override
             public boolean onAreaTouched(TouchEvent event, float x, float y) {
-                if(spriteFoquin.getY()==350) {
+                if(spriteFoquin.getY()==350 ) {
                     spriteFoquin.setAlpha(0);
                     spriteFoquinRojo.setAlpha(0);
                     spriteFoquinVerde.setAlpha(1);
@@ -261,6 +281,22 @@ public class EscenaJuego extends EscenaBase {
     protected void onManagedUpdate(float pSecondsElapsed) {
         super.onManagedUpdate(pSecondsElapsed);
 
+        spritePlataformaEntrada.setPosition(spritePlataformaEntrada.getX()-5,spritePlataformaEntrada.getY());
+
+        if(spriteFoquin.collidesWith(spritePlataformaEntrada)){
+            foquinCae2=false;
+        }
+        else{
+            foquinCae2 =true;
+        }
+        if(foquinCae2==true&& foquinCae3==true){
+            spriteFoquin.setPosition(spriteFoquin.getX(),spriteFoquin.getY()-12);
+            spriteFoquinRojo.setPosition(spriteFoquinRojo.getX(),spriteFoquinRojo.getY()-12);
+            spriteFoquinVerde.setPosition(spriteFoquinVerde.getX(),spriteFoquinVerde.getY()-12);
+            spriteFoquinAzul.setPosition(spriteFoquinAzul.getX(),spriteFoquinAzul.getY()-12);
+
+
+        }
 
         int colorplataforma= (int) (Math.floor(Math.random() * (3 - 1 + 1)) + 1);
 
@@ -270,7 +306,7 @@ public class EscenaJuego extends EscenaBase {
             if(colorplataforma==1) {
                 Sprite spritePlataformaRoja = cargarSprite(ControlJuego.ANCHO_CAMARA + regionPlataformaRoja.getWidth(),
                         (ControlJuego.ALTO_CAMARA - regionPlataformaRoja.getHeight()) +
-                                regionPlataformaRoja.getHeight() - 600, regionPlataformaRoja);
+                                regionPlataformaRoja.getHeight()-600, regionPlataformaRoja);
                 Plataforma nuevoPlataformaRoja = new Plataforma();
                 nuevoPlataformaRoja.setSprite(spritePlataformaRoja);
                 listaPlataformas.add(nuevoPlataformaRoja);
@@ -279,21 +315,25 @@ public class EscenaJuego extends EscenaBase {
             if(colorplataforma==2) {
                 Sprite spritePlataformaVerde = cargarSprite(ControlJuego.ANCHO_CAMARA + regionPlataformaVerde.getWidth(),
                         (ControlJuego.ALTO_CAMARA - regionPlataformaVerde.getHeight()) +
-                                regionPlataformaVerde.getHeight() - 600, regionPlataformaVerde);
-                Plataforma nuevoPlataformaRoja = new Plataforma();
-                nuevoPlataformaRoja.setSprite(spritePlataformaVerde);
-                listaPlataformas.add(nuevoPlataformaRoja);
-                attachChild(nuevoPlataformaRoja.getSpritePlataforma());
+                                regionPlataformaVerde.getHeight()-600, regionPlataformaVerde);
+                Plataforma nuevoPlataformaVerde = new Plataforma();
+                nuevoPlataformaVerde.setSprite(spritePlataformaVerde);
+                listaPlataformas.add(nuevoPlataformaVerde);
+                attachChild(nuevoPlataformaVerde.getSpritePlataforma());
             }
             if(colorplataforma==3) {
                 Sprite spritePlataformaAzul = cargarSprite(ControlJuego.ANCHO_CAMARA + regionPlataformaAzul.getWidth(),
                         (ControlJuego.ALTO_CAMARA - regionPlataformaAzul.getHeight()) +
-                                regionPlataformaAzul.getHeight() - 600, regionPlataformaAzul);
-                Plataforma nuevoPlataformaRoja = new Plataforma();
-                nuevoPlataformaRoja.setSprite(spritePlataformaAzul);
-                listaPlataformas.add(nuevoPlataformaRoja);
-                attachChild(nuevoPlataformaRoja.getSpritePlataforma());
+                                regionPlataformaAzul.getHeight()-600, regionPlataformaAzul);
+                Plataforma nuevoPlataformaAzul = new Plataforma();
+                nuevoPlataformaAzul.setSprite(spritePlataformaAzul);
+                listaPlataformas.add(nuevoPlataformaAzul);
+                attachChild(nuevoPlataformaAzul.getSpritePlataforma());
             }
+        }
+
+        if(spritePlataformaEntrada.getX()+spritePlataformaEntrada.getWidth()+80<0){
+            foquinCae3=false;
         }
 
         for (int i= listaPlataformas.size()-1; i>=0; i--) {
@@ -301,12 +341,12 @@ public class EscenaJuego extends EscenaBase {
             plataforma.mover(-8, 0);
             //agregar condicion para que foquin salte en las plataformas
 
-            if(spriteFoquin.collidesWith(plataforma.getSpritePlataforma())){
-
-
-
+            if(spriteFoquin.collidesWith(plataforma.getSpritePlataforma())) {
+                contadorcolision=1;
             }
-
+            else{
+                contadorcolision=0;
+            }
 
             if (plataforma.getSpritePlataforma().getX() < -plataforma.getSpritePlataforma().getWidth()) {
                 detachChild(plataforma.getSpritePlataforma());
@@ -314,8 +354,13 @@ public class EscenaJuego extends EscenaBase {
             }
 
         }
-
-
+        //probar contador para ver si foquin toca una paltaforma. bandera brinco foquin
+        if(contadorcolision==0 && foquinCae3==false){
+            spriteFoquin.setPosition(spriteFoquin.getX(),spriteFoquin.getY()-12);
+            spriteFoquinRojo.setPosition(spriteFoquinRojo.getX(),spriteFoquinRojo.getY()-12);
+            spriteFoquinVerde.setPosition(spriteFoquinVerde.getX(),spriteFoquinVerde.getY()-12);
+            spriteFoquinAzul.setPosition(spriteFoquinAzul.getX(),spriteFoquinAzul.getY()-12);
+        }
 
     }
 

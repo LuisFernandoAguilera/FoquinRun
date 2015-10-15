@@ -13,11 +13,13 @@ public class Plataforma {
     public Sprite getSpritePlataforma() {
         return sprite;
     }
+
     public void setSprite(Sprite spritePlataforma) {
         this.sprite = spritePlataforma;
     }
-    public void mover(int dx, int dy) {
 
+    public void mover(int dx, int dy) {
         sprite.setPosition( sprite.getX()+dx, sprite.getY()+dy );
     }
+
 }
