@@ -37,6 +37,8 @@ public class EscenaJuego extends EscenaBase {
     private TiledTextureRegion regionBtnVerde;
     private TiledTextureRegion regionBtnAzul;
 
+    private ITextureRegion regionPantallaPerdiste;
+    private Sprite spritePantallaPerdiste;
 
     private AnimatedSprite spriteFoquin;
     private TiledTextureRegion regionFoquin;
@@ -50,6 +52,7 @@ public class EscenaJuego extends EscenaBase {
     private AnimatedSprite spriteFoquinAzul;
     private TiledTextureRegion regionFoquinAzul;
 
+
     private ITextureRegion regionPlataformaEntrada;
     private Sprite spritePlataformaEntrada;
 
@@ -59,6 +62,8 @@ public class EscenaJuego extends EscenaBase {
     private MenuScene menu2;
 
     private ArrayList <Plataforma> listaPlataformas;
+    private ArrayList <Plataforma> listaColorPlataformas;
+
     private ITextureRegion regionPlataformaRoja;
     private ITextureRegion regionPlataformaVerde;
     private ITextureRegion regionPlataformaAzul;
@@ -68,14 +73,15 @@ public class EscenaJuego extends EscenaBase {
 
     private boolean foquinSalta=false;
 
-    private boolean foquinCae=true;
     private boolean foquinCae2=true;
     private boolean foquinCae3=true;
-    private boolean foquinCae4=false;
     private int contadorcolision=0;
+    private int color=0;
+    private int vidaFoquin=1;
 
     private boolean collionMonoPla=false;
     private boolean plataformaSale=false;
+
 
 
 
@@ -87,10 +93,13 @@ public class EscenaJuego extends EscenaBase {
         regionFondoMedio= cargarImagen("EscenaJuego/Fondos/edificio_atras_1.png");
         regionFonodFrente=cargarImagen("EscenaJuego/Fondos/escenario_frente_1.png");
 
-        regionFoquin= cargarImagenMosaico("EscenaJuego/foquin.png", 500, 140, 1, 5);
-        regionFoquinRojo= cargarImagenMosaico("EscenaJuego/FoquinRojo.png", 500, 140, 1, 5);
-        regionFoquinVerde=cargarImagenMosaico("EscenaJuego/FoquinVerde.png", 500, 140, 1, 5);
-        regionFoquinAzul=cargarImagenMosaico("EscenaJuego/FoquinAzul.png", 500, 140, 1, 5);
+        regionPantallaPerdiste=cargarImagen("EscenaJuego/perdiste.png");
+
+        regionFoquin= cargarImagenMosaico("EscenaJuego/foquin.png", 1000, 280, 1, 5);
+        regionFoquinRojo= cargarImagenMosaico("EscenaJuego/FoquinRojo.png", 1000, 280, 1, 5);
+        regionFoquinVerde=cargarImagenMosaico("EscenaJuego/FoquinVerde.png", 1000, 280, 1, 5);
+        regionFoquinAzul=cargarImagenMosaico("EscenaJuego/FoquinAzul.png", 1000, 280, 1, 5);
+
 
         regionBtnRojo= cargarImagenMosaico("EscenaJuego/Botones/botonRojo.png", 240, 120, 1, 2);
         regionBtnVerde= cargarImagenMosaico("EscenaJuego/Botones/botonVerde.png", 240, 120, 1, 2);
@@ -117,6 +126,10 @@ public class EscenaJuego extends EscenaBase {
         spriteFondoMedio=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA -250, regionFondoMedio);
         spriteFondoFrente=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionFonodFrente);
 
+        spritePantallaPerdiste=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionPantallaPerdiste);
+        attachChild(spritePantallaPerdiste);
+        spritePantallaPerdiste.setAlpha(0);
+
         AutoParallaxBackground fondoAnimado = new AutoParallaxBackground(1, 1, 1, 5);
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-2, spriteFondo));
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3,spriteFondoMedio));
@@ -137,6 +150,8 @@ public class EscenaJuego extends EscenaBase {
                     spriteFoquinRojo.setAlpha(1);
                     spriteFoquinVerde.setAlpha(0);
                     spriteFoquinAzul.setAlpha(0);
+
+
                     JumpModifier salto = new JumpModifier(1, spriteFoquin.getX(), spriteFoquin.getX(),
                             spriteFoquin.getY(), spriteFoquin.getY(), -150);
                     spriteFoquin.registerEntityModifier(salto);
@@ -244,7 +259,7 @@ public class EscenaJuego extends EscenaBase {
         spriteFoquin.animate(100);
         attachChild(spriteFoquin);
         spriteFoquin.setPosition(250, 350);
-        spriteFoquin.setScale(2);
+
 
         spriteFoquinRojo = new AnimatedSprite(ControlJuego.ALTO_CAMARA / 2,
                 ControlJuego.ALTO_CAMARA / 2, regionFoquinRojo,
@@ -252,8 +267,8 @@ public class EscenaJuego extends EscenaBase {
         spriteFoquinRojo.animate(100);
         attachChild(spriteFoquinRojo);
         spriteFoquinRojo.setPosition(250, 350);
-        spriteFoquinRojo.setScale(2);
         spriteFoquinRojo.setAlpha(0);
+
 
         spriteFoquinVerde = new AnimatedSprite(ControlJuego.ALTO_CAMARA / 2,
                 ControlJuego.ALTO_CAMARA / 2, regionFoquinVerde,
@@ -261,8 +276,8 @@ public class EscenaJuego extends EscenaBase {
         spriteFoquinVerde.animate(100);
         attachChild(spriteFoquinVerde);
         spriteFoquinVerde.setPosition(250, 350);
-        spriteFoquinVerde.setScale(2);
         spriteFoquinVerde.setAlpha(0);
+
 
         spriteFoquinAzul = new AnimatedSprite(ControlJuego.ALTO_CAMARA / 2,
                 ControlJuego.ALTO_CAMARA / 2, regionFoquinAzul,
@@ -270,8 +285,8 @@ public class EscenaJuego extends EscenaBase {
         spriteFoquinAzul.animate(100);
         attachChild(spriteFoquinAzul);
         spriteFoquinAzul.setPosition(250, 350);
-        spriteFoquinAzul.setScale(2);
         spriteFoquinAzul.setAlpha(0);
+
 
     }
 
@@ -294,8 +309,6 @@ public class EscenaJuego extends EscenaBase {
             spriteFoquinRojo.setPosition(spriteFoquinRojo.getX(),spriteFoquinRojo.getY()-12);
             spriteFoquinVerde.setPosition(spriteFoquinVerde.getX(),spriteFoquinVerde.getY()-12);
             spriteFoquinAzul.setPosition(spriteFoquinAzul.getX(),spriteFoquinAzul.getY()-12);
-
-
         }
 
         int colorplataforma= (int) (Math.floor(Math.random() * (3 - 1 + 1)) + 1);
@@ -309,8 +322,10 @@ public class EscenaJuego extends EscenaBase {
                                 regionPlataformaRoja.getHeight()-600, regionPlataformaRoja);
                 Plataforma nuevoPlataformaRoja = new Plataforma();
                 nuevoPlataformaRoja.setSprite(spritePlataformaRoja);
+                nuevoPlataformaRoja.setColor(1);
                 listaPlataformas.add(nuevoPlataformaRoja);
                 attachChild(nuevoPlataformaRoja.getSpritePlataforma());
+
             }
             if(colorplataforma==2) {
                 Sprite spritePlataformaVerde = cargarSprite(ControlJuego.ANCHO_CAMARA + regionPlataformaVerde.getWidth(),
@@ -318,8 +333,10 @@ public class EscenaJuego extends EscenaBase {
                                 regionPlataformaVerde.getHeight()-600, regionPlataformaVerde);
                 Plataforma nuevoPlataformaVerde = new Plataforma();
                 nuevoPlataformaVerde.setSprite(spritePlataformaVerde);
+                nuevoPlataformaVerde.setColor(2);
                 listaPlataformas.add(nuevoPlataformaVerde);
                 attachChild(nuevoPlataformaVerde.getSpritePlataforma());
+
             }
             if(colorplataforma==3) {
                 Sprite spritePlataformaAzul = cargarSprite(ControlJuego.ANCHO_CAMARA + regionPlataformaAzul.getWidth(),
@@ -327,8 +344,10 @@ public class EscenaJuego extends EscenaBase {
                                 regionPlataformaAzul.getHeight()-600, regionPlataformaAzul);
                 Plataforma nuevoPlataformaAzul = new Plataforma();
                 nuevoPlataformaAzul.setSprite(spritePlataformaAzul);
+                nuevoPlataformaAzul.setColor(3);
                 listaPlataformas.add(nuevoPlataformaAzul);
                 attachChild(nuevoPlataformaAzul.getSpritePlataforma());
+
             }
         }
 
@@ -343,23 +362,88 @@ public class EscenaJuego extends EscenaBase {
 
             if(spriteFoquin.collidesWith(plataforma.getSpritePlataforma())) {
                 contadorcolision=1;
+
+                if(spriteFoquin.getY()<350 && spriteFoquin.getY()>330){
+                    spriteFoquin.setPosition(spriteFoquin.getX(),350);
+                    spriteFoquinRojo.setPosition(spriteFoquinRojo.getX(),350);
+                    spriteFoquinVerde.setPosition(spriteFoquinVerde.getX(),350);
+                    spriteFoquinAzul.setPosition(spriteFoquinAzul.getX(),350);
+                }
+
             }
             else{
                 contadorcolision=0;
+            }
+
+            if(spriteFoquin.collidesWith(plataforma.getSpritePlataforma())&&
+                    spriteFoquinRojo.getAlpha()==1 && plataforma.getColor()==2 ){
+                color=1;
+            }
+            if(spriteFoquin.collidesWith(plataforma.getSpritePlataforma())&&
+                    spriteFoquinRojo.getAlpha()==1 && plataforma.getColor()==3 ){
+                color=1;
+            }
+
+
+            if(spriteFoquin.collidesWith(plataforma.getSpritePlataforma())&&
+                    spriteFoquinVerde.getAlpha()==1&& plataforma.getColor()==1) {
+                color = 2;
+            }
+            if(spriteFoquin.collidesWith(plataforma.getSpritePlataforma())&&
+                    spriteFoquinVerde.getAlpha()==1&& plataforma.getColor()==3) {
+                color = 2;
+            }
+
+
+            if(spriteFoquin.collidesWith(plataforma.getSpritePlataforma())&&
+                    spriteFoquinAzul.getAlpha()==1&& plataforma.getColor()==1){
+                color=3;
+            }
+            if(spriteFoquin.collidesWith(plataforma.getSpritePlataforma())&&
+                    spriteFoquinAzul.getAlpha()==1&& plataforma.getColor()==2){
+                color=3;
             }
 
             if (plataforma.getSpritePlataforma().getX() < -plataforma.getSpritePlataforma().getWidth()) {
                 detachChild(plataforma.getSpritePlataforma());
                 listaPlataformas.remove(plataforma);
             }
-
         }
-        //probar contador para ver si foquin toca una paltaforma. bandera brinco foquin
+
+
         if(contadorcolision==0 && foquinCae3==false){
             spriteFoquin.setPosition(spriteFoquin.getX(),spriteFoquin.getY()-12);
             spriteFoquinRojo.setPosition(spriteFoquinRojo.getX(),spriteFoquinRojo.getY()-12);
             spriteFoquinVerde.setPosition(spriteFoquinVerde.getX(),spriteFoquinVerde.getY()-12);
             spriteFoquinAzul.setPosition(spriteFoquinAzul.getX(),spriteFoquinAzul.getY()-12);
+        }
+        if(color==1 ){
+            vidaFoquin--;
+
+        }
+        if(color==2){
+            vidaFoquin--;
+        }
+        if(color==3){
+            vidaFoquin--;
+        }
+
+        //si la vida de foquin es 0 pierdes
+        if(vidaFoquin==0){
+            spritePantallaPerdiste.setAlpha(1);
+
+            spriteFoquin.setAlpha(0);
+            spriteFoquinRojo.setAlpha(0);
+            spriteFoquinVerde.setAlpha(0);
+            spriteFoquinAzul.setAlpha(0);
+        }
+        if(spriteFoquin.getY()<50){
+            spritePantallaPerdiste.setAlpha(1);
+
+            spriteFoquin.setAlpha(0);
+            spriteFoquinRojo.setAlpha(0);
+            spriteFoquinVerde.setAlpha(0);
+            spriteFoquinAzul.setAlpha(0);
         }
 
     }
