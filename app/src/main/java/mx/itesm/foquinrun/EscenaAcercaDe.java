@@ -20,9 +20,16 @@ public class EscenaAcercaDe extends EscenaBase
 
     private ITextureRegion regionFondo;
     private ITextureRegion regionFondoMedio;
+    private ITextureRegion regionFondoFrente;
+    private ITextureRegion regionFondoMedioLuz;
+    private ITextureRegion regionFondoFrenteLuz;
 
     private Sprite spriteFondo;
     private Sprite spriteFondoMedio;
+    private Sprite spriteFondoFrente;
+    private Sprite spriteFondoMedioLuz;
+    private Sprite spriteFondoFrenteLuz;
+
     private MenuScene menu;
 
     private ITextureRegion regionHistoria;
@@ -37,16 +44,24 @@ public class EscenaAcercaDe extends EscenaBase
     private final int OPCION_HISTORIA = 0;
     private final int OPCION_CREDITOS=1;
 
+    private ITextureRegion regionLuna;
+    private Sprite spriteLuna;
+
     @Override
     public void cargarRecursos() {
         regionFondo = cargarImagen("EscenaJuego/Fondos/cielo 2.png");
         regionFondoMedio= cargarImagen("EscenaJuego/Fondos/edificio_atras_1.png");
+        regionFondoFrente= cargarImagen("EscenaJuego/Fondos/escenario_frente_1.png");
+        regionFondoMedioLuz=cargarImagen("EscenaAcercaDe/Luces/1escenarioAtras_11.png");
+        regionFondoFrenteLuz=cargarImagen("EscenaAcercaDe/Luces/1escenariofrente_9.png");
 
         regionHistoria= cargarImagen("EscenaAcercaDe/boton.png");
         regionCreditos = cargarImagen("EscenaAcercaDe/boton.png");
 
         regionBtnCreditos= cargarImagenMosaico("EscenaAcercaDe/creditos.png", 934, 145, 1, 2);
         regionBtnHistoria= cargarImagenMosaico("EscenaAcercaDe/Historia.png", 934, 145, 1, 2);
+
+        regionLuna=cargarImagen("boton.png");
     }
 
     @Override
@@ -55,10 +70,16 @@ public class EscenaAcercaDe extends EscenaBase
 
         spriteFondo = cargarSprite(ControlJuego.ANCHO_CAMARA/2, ControlJuego.ALTO_CAMARA/2, regionFondo);
         spriteFondoMedio=cargarSprite(ControlJuego.ALTO_CAMARA/2,ControlJuego.ALTO_CAMARA/2,regionFondoMedio);
+        spriteFondoMedioLuz=cargarSprite(ControlJuego.ALTO_CAMARA/2,ControlJuego.ALTO_CAMARA/2,regionFondoMedioLuz);
+        spriteFondoFrente=cargarSprite(ControlJuego.ALTO_CAMARA/2,ControlJuego.ALTO_CAMARA/2-250,regionFondoFrente);
+        spriteFondoFrenteLuz=cargarSprite(ControlJuego.ALTO_CAMARA/2,ControlJuego.ALTO_CAMARA/2-250,regionFondoFrenteLuz);
 
         AutoParallaxBackground fondoAnimado = new AutoParallaxBackground(1, 1, 1, 5);
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-2, spriteFondo));
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3,spriteFondoMedio));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3,spriteFondoMedioLuz));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3,spriteFondoFrente));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3, spriteFondoFrenteLuz));
         setBackground(fondoAnimado);
 
         agregarMenu();
@@ -78,10 +99,14 @@ public class EscenaAcercaDe extends EscenaBase
         spriteCreditos.setPosition(640, 100);
 
 
+        spriteLuna=cargarSprite(ControlJuego.ANCHO_CAMARA/2+1200,ControlJuego.ALTO_CAMARA/2+300, regionLuna);
+        attachChild(spriteLuna);
+
+
     }
     private void agregarMenu() {
         menu = new MenuScene(actividadJuego.camara);
-        menu.setPosition(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA-250 / 2);
+        menu.setPosition(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2);
 
         IMenuItem opcionHistoria = new ScaleMenuItemDecorator(new SpriteMenuItem(OPCION_HISTORIA,
                 regionHistoria, actividadJuego.getVertexBufferObjectManager()), 1.5f, 1);
@@ -98,7 +123,7 @@ public class EscenaAcercaDe extends EscenaBase
 
 
         opcionHistoria.setPosition(0,50);
-        opcionCreditos.setPosition(0, -300);
+        opcionCreditos.setPosition(0,-300);
 
 
         menu.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
@@ -129,6 +154,11 @@ public class EscenaAcercaDe extends EscenaBase
         setChildScene(menu);
 
 
+    }
+    @Override
+    protected void onManagedUpdate(float pSecondsElapsed) {
+        super.onManagedUpdate(pSecondsElapsed);
+            spriteLuna.setPosition(spriteLuna.getX() - 1, spriteLuna.getY());
     }
 
     @Override
