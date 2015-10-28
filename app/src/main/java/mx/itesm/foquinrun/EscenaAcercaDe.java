@@ -49,17 +49,17 @@ public class EscenaAcercaDe extends EscenaBase
 
     @Override
     public void cargarRecursos() {
-        regionFondo = cargarImagen("EscenaJuego/Fondos/cielo 2.png");
-        regionFondoMedio= cargarImagen("EscenaJuego/Fondos/edificio_atras_1.png");
-        regionFondoFrente= cargarImagen("EscenaJuego/Fondos/escenario_frente_1.png");
-        regionFondoMedioLuz=cargarImagen("EscenaAcercaDe/Luces/1escenarioAtras_11.png");
-        regionFondoFrenteLuz=cargarImagen("EscenaAcercaDe/Luces/1escenariofrente_9.png");
+        regionFondo = cargarImagen("EscenaJuego/Fondos/cielo completo.png");
+        regionFondoMedio= cargarImagen("EscenaJuego/Fondos/medio completo.png");
+        regionFondoFrente= cargarImagen("EscenaJuego/Fondos/frente completo.png");
+        regionFondoMedioLuz=cargarImagen("EscenaJuego/Fondos/Luces/Atras/30 2.png");
+        regionFondoFrenteLuz=cargarImagen("EscenaJuego/Fondos/Luces/30.png");
 
         regionHistoria= cargarImagen("EscenaAcercaDe/boton.png");
         regionCreditos = cargarImagen("EscenaAcercaDe/boton.png");
 
-        regionBtnCreditos= cargarImagenMosaico("EscenaAcercaDe/creditos.png", 934, 145, 1, 2);
-        regionBtnHistoria= cargarImagenMosaico("EscenaAcercaDe/Historia.png", 934, 145, 1, 2);
+        regionBtnCreditos= cargarImagenMosaico("EscenaAcercaDe/Creditos.png", 1790, 214, 1, 2);
+        regionBtnHistoria= cargarImagenMosaico("EscenaAcercaDe/Historia.png", 1790, 214, 1, 2);
 
         regionLuna=cargarImagen("boton.png");
     }
@@ -99,7 +99,7 @@ public class EscenaAcercaDe extends EscenaBase
         spriteCreditos.setPosition(640, 100);
 
 
-        spriteLuna=cargarSprite(ControlJuego.ANCHO_CAMARA/2+1200,ControlJuego.ALTO_CAMARA/2+300, regionLuna);
+        spriteLuna=cargarSprite(ControlJuego.ANCHO_CAMARA/2+1500,ControlJuego.ALTO_CAMARA/2+300, regionLuna);
         attachChild(spriteLuna);
 
 

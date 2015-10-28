@@ -30,4 +30,5 @@ public class Plataforma {
         this.color= colorPlataforma;
     }
 
+
 }

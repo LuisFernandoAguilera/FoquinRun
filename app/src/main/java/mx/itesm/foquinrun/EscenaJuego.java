@@ -57,6 +57,7 @@ public class EscenaJuego extends EscenaBase {
     private Sprite spritePlataformaEntrada;
 
 
+
     private ITextureRegion regionBtnPausa;
     private final int OPCION_BTN_PAUSA=0;
     private MenuScene menu;
@@ -78,12 +79,9 @@ public class EscenaJuego extends EscenaBase {
     private boolean foquinCae2=true;
     private boolean foquinCae3=true;
     private int contadorcolision=0;
-    private int color=0;
     private int vidaFoquin=1;
     private boolean pausa=false;
 
-    private boolean collionMonoPla=false;
-    private boolean plataformaSale=false;
 
     private int contadorTiempo=0;
 
@@ -116,6 +114,8 @@ public class EscenaJuego extends EscenaBase {
 
         regionBtnPausa= cargarImagen("EscenaJuego/Botones/BotonPausa.png");
         regionPantallaPausa= cargarImagen("EsenaPausa/fondo_pausa.png");
+
+
 
 
     }
@@ -332,6 +332,8 @@ public class EscenaJuego extends EscenaBase {
     protected void onManagedUpdate(float pSecondsElapsed) {
         super.onManagedUpdate(pSecondsElapsed);
 
+        contadorTiempo=contadorTiempo+1;
+
             spritePlataformaEntrada.setPosition(spritePlataformaEntrada.getX() - 5, spritePlataformaEntrada.getY());
 
         if (spriteFoquin.collidesWith(spritePlataformaEntrada)) {
@@ -358,6 +360,7 @@ public class EscenaJuego extends EscenaBase {
                 Plataforma nuevoPlataformaRoja = new Plataforma();
                 nuevoPlataformaRoja.setSprite(spritePlataformaRoja);
                 nuevoPlataformaRoja.setColor(1);
+                nuevoPlataformaRoja.getSpritePlataforma().setColor(0.4f,0f,0f);
                 listaPlataformas.add(nuevoPlataformaRoja);
                 attachChild(nuevoPlataformaRoja.getSpritePlataforma());
 
@@ -369,6 +372,7 @@ public class EscenaJuego extends EscenaBase {
                 Plataforma nuevoPlataformaVerde = new Plataforma();
                 nuevoPlataformaVerde.setSprite(spritePlataformaVerde);
                 nuevoPlataformaVerde.setColor(2);
+                nuevoPlataformaVerde.getSpritePlataforma().setColor(0f, 0.4f, 0f);
                 listaPlataformas.add(nuevoPlataformaVerde);
                 attachChild(nuevoPlataformaVerde.getSpritePlataforma());
 
@@ -380,6 +384,7 @@ public class EscenaJuego extends EscenaBase {
                 Plataforma nuevoPlataformaAzul = new Plataforma();
                 nuevoPlataformaAzul.setSprite(spritePlataformaAzul);
                 nuevoPlataformaAzul.setColor(3);
+                nuevoPlataformaAzul.getSpritePlataforma().setColor(0f,0f,0.4f);
                 listaPlataformas.add(nuevoPlataformaAzul);
                 attachChild(nuevoPlataformaAzul.getSpritePlataforma());
 
@@ -411,31 +416,33 @@ public class EscenaJuego extends EscenaBase {
 
             if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma()) &&
                     spriteFoquinRojo.getAlpha() == 1 && plataforma.getColor() == 2) {
-                color = 1;
+                vidaFoquin--;
             }
             if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma()) &&
                     spriteFoquinRojo.getAlpha() == 1 && plataforma.getColor() == 3) {
-                color = 1;
+                vidaFoquin--;
             }
-
 
             if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma()) &&
                     spriteFoquinVerde.getAlpha() == 1 && plataforma.getColor() == 1) {
-                color = 2;
+                vidaFoquin--;
             }
             if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma()) &&
                     spriteFoquinVerde.getAlpha() == 1 && plataforma.getColor() == 3) {
-                color = 2;
+                vidaFoquin--;
             }
 
 
             if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma()) &&
                     spriteFoquinAzul.getAlpha() == 1 && plataforma.getColor() == 1) {
-                color = 3;
+                vidaFoquin--;
             }
             if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma()) &&
                     spriteFoquinAzul.getAlpha() == 1 && plataforma.getColor() == 2) {
-                color = 3;
+                vidaFoquin--;
+            }
+            if(spriteFoquin.collidesWith(plataforma.getSpritePlataforma())){
+                plataforma.getSpritePlataforma().setColor(1f,1f,1f);
             }
 
             if (plataforma.getSpritePlataforma().getX() < -plataforma.getSpritePlataforma().getWidth()) {
@@ -451,15 +458,6 @@ public class EscenaJuego extends EscenaBase {
             spriteFoquinVerde.setPosition(spriteFoquinVerde.getX(), spriteFoquinVerde.getY() - 12);
             spriteFoquinAzul.setPosition(spriteFoquinAzul.getX(), spriteFoquinAzul.getY() - 12);
         }
-        if (color == 1) {
-            vidaFoquin--;
-        }
-        if (color == 2) {
-            vidaFoquin--;
-        }
-        if (color == 3) {
-            vidaFoquin--;
-        }
 
         //si la vida de foquin es 0 pierdes
         if (vidaFoquin == 0) {
@@ -469,6 +467,10 @@ public class EscenaJuego extends EscenaBase {
             spriteFoquinRojo.setAlpha(0);
             spriteFoquinVerde.setAlpha(0);
             spriteFoquinAzul.setAlpha(0);
+            spriteFoquin.setPosition(-300, -300);
+            spriteFoquinRojo.setPosition(-300,-300);
+            spriteFoquinVerde.setPosition(-300,-300);
+            spriteFoquinAzul.setPosition(-300,-300);
         }
         if (spriteFoquin.getY() < 50) {
             spritePantallaPerdiste.setAlpha(1);
