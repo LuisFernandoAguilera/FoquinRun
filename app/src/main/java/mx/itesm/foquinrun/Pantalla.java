@@ -38,8 +38,8 @@ public class Pantalla extends EscenaBase {
     private ITextureRegion regionLuzFrente;
     private Sprite spriteLuzFrente;
 
-    private TiledTextureRegion regionPersonajes;
-    private AnimatedSprite spritePersonajes;
+    private ITextureRegion regionPersonajes;
+    private Sprite spritePersonajes;
 
     private AnimatedSprite spriteFoquin;
     private TiledTextureRegion regionFoquin;
@@ -67,14 +67,14 @@ public class Pantalla extends EscenaBase {
         regionLuzMedio=cargarImagen("EscenaAcercaDe/Luces/1escenarioAtras_11.png");
         regionLuzFrente=cargarImagen("EscenaAcercaDe/Luces/1escenariofrente_9.png");
 
-        regionBtnJugar = cargarImagen("Pantalla/Play.png");
+        regionBtnJugar = cargarImagen("Menu/Play.png");
 
         regionBtnSonido=cargarImagen("Pantalla/Sonido.png");
         reguionBtnMusica=cargarImagen("Pantalla/Musica.png");
 
         regionMundo= cargarImagen("Pantalla/mundo.png");
 
-        regionPersonajes= cargarImagenMosaico("Pantalla/Personajes.png", 895, 107, 1, 2);
+        regionPersonajes= cargarImagen("Pantalla/Personajes.png");
 
         regionFoquin= cargarImagenMosaico("EscenaJuego/foquin.png", 1000, 280, 1, 5);
     }
@@ -100,12 +100,9 @@ public class Pantalla extends EscenaBase {
         attachChild(spriteMundo);
         spriteMundo.setScale(2);
 
-        spritePersonajes = new AnimatedSprite(ControlJuego.ALTO_CAMARA / 2,
-                ControlJuego.ALTO_CAMARA / 2, regionPersonajes,
-                actividadJuego.getVertexBufferObjectManager());
-        spritePersonajes.animate(250);
+        spritePersonajes=cargarSprite(ControlJuego.ANCHO_CAMARA/2, ControlJuego.ALTO_CAMARA/2, regionPersonajes);
         attachChild(spritePersonajes);
-        spritePersonajes.setPosition(350, 600);
+        spritePersonajes.setPosition(340,600);
 
         spriteFoquin = new AnimatedSprite(ControlJuego.ALTO_CAMARA / 2,
                 ControlJuego.ALTO_CAMARA / 2, regionFoquin,
@@ -136,7 +133,7 @@ public class Pantalla extends EscenaBase {
         menu.buildAnimations();
         menu.setBackgroundEnabled(false);
 
-        opcionJugar.setPosition(-300, -350);
+        opcionJugar.setPosition(-300, -330);
 
         opcionSonido.setPosition(-550, 360);
         opcionMusica.setPosition(-460, 360);

@@ -7,7 +7,6 @@ import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.scene.menu.item.SpriteMenuItem;
 import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.AnimatedSprite;
-import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
@@ -53,15 +52,12 @@ public class EscenaAcercaDe extends EscenaBase
         regionFondoMedio= cargarImagen("EscenaJuego/Fondos/medio completo.png");
         regionFondoFrente= cargarImagen("EscenaJuego/Fondos/frente completo.png");
         regionFondoMedioLuz=cargarImagen("EscenaJuego/Fondos/Luces/Atras/30 2.png");
-        regionFondoFrenteLuz=cargarImagen("EscenaJuego/Fondos/Luces/30.png");
+        regionFondoFrenteLuz=cargarImagen("EscenaJuego/Fondos/Luces/Frente/30.png");
 
-        regionHistoria= cargarImagen("EscenaAcercaDe/boton.png");
-        regionCreditos = cargarImagen("EscenaAcercaDe/boton.png");
+        regionHistoria= cargarImagen("EscenaAcercaDe/Historia.png");
+        regionCreditos = cargarImagen("EscenaAcercaDe/Creditos.png");
 
-        regionBtnCreditos= cargarImagenMosaico("EscenaAcercaDe/Creditos.png", 1790, 214, 1, 2);
-        regionBtnHistoria= cargarImagenMosaico("EscenaAcercaDe/Historia.png", 1790, 214, 1, 2);
-
-        regionLuna=cargarImagen("boton.png");
+        regionLuna=cargarImagen("EscenaAcercaDe/boton.png");
     }
 
     @Override
@@ -76,28 +72,13 @@ public class EscenaAcercaDe extends EscenaBase
 
         AutoParallaxBackground fondoAnimado = new AutoParallaxBackground(1, 1, 1, 5);
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-2, spriteFondo));
-        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3,spriteFondoMedio));
-        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3,spriteFondoMedioLuz));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3, spriteFondoMedio));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3, spriteFondoMedioLuz));
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3,spriteFondoFrente));
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3, spriteFondoFrenteLuz));
         setBackground(fondoAnimado);
 
         agregarMenu();
-
-        spriteHistoria = new AnimatedSprite(ControlJuego.ALTO_CAMARA / 2,
-                ControlJuego.ALTO_CAMARA / 2, regionBtnHistoria,
-                actividadJuego.getVertexBufferObjectManager());
-        spriteHistoria.animate(250);
-        attachChild(spriteHistoria);
-        spriteHistoria.setPosition(640, 450);
-
-        spriteCreditos = new AnimatedSprite(ControlJuego.ALTO_CAMARA / 2,
-                ControlJuego.ALTO_CAMARA / 2, regionBtnCreditos,
-                actividadJuego.getVertexBufferObjectManager());
-        spriteCreditos.animate(250);
-        attachChild(spriteCreditos);
-        spriteCreditos.setPosition(640, 100);
-
 
         spriteLuna=cargarSprite(ControlJuego.ANCHO_CAMARA/2+1500,ControlJuego.ALTO_CAMARA/2+300, regionLuna);
         attachChild(spriteLuna);
@@ -112,8 +93,7 @@ public class EscenaAcercaDe extends EscenaBase
                 regionHistoria, actividadJuego.getVertexBufferObjectManager()), 1.5f, 1);
         IMenuItem opcionCreditos = new ScaleMenuItemDecorator(new SpriteMenuItem(OPCION_CREDITOS,
                 regionCreditos, actividadJuego.getVertexBufferObjectManager()), 1.5f, 1);
-        opcionCreditos.setAlpha(0);
-        opcionHistoria.setAlpha(0);
+
 
         menu.addMenuItem(opcionHistoria);
         menu.addMenuItem(opcionCreditos);
@@ -122,8 +102,8 @@ public class EscenaAcercaDe extends EscenaBase
         menu.setBackgroundEnabled(false);
 
 
-        opcionHistoria.setPosition(0,50);
-        opcionCreditos.setPosition(0,-300);
+        opcionHistoria.setPosition(-350,200);
+        opcionCreditos.setPosition(350,200);
 
 
         menu.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {

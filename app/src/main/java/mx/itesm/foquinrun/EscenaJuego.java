@@ -24,6 +24,22 @@ import java.util.ArrayList;
 
 
 public class EscenaJuego extends EscenaBase {
+    private ITextureRegion regionLuzF1;
+    private Sprite spriteLuzF1;
+    private ITextureRegion regionLuzF2;
+    private Sprite spriteLuzF2;
+    private ITextureRegion regionLuzF3;
+    private Sprite spriteLuzF3;
+    private ITextureRegion regionLuzF4;
+    private Sprite spriteLuzF4;
+    private ITextureRegion regionLuzF5;
+    private Sprite spriteLuzF5;
+    private ITextureRegion regionLuzF6;
+    private Sprite spriteLuzF6;
+    private ITextureRegion regionLuzF7;
+    private Sprite spriteLuzF7;
+    private ITextureRegion regionLuzF8;
+    private Sprite spriteLuzF8;
 
 
     private ITextureRegion regionFondo;
@@ -84,10 +100,20 @@ public class EscenaJuego extends EscenaBase {
 
 
     private int contadorTiempo=0;
+    private int contadorLuz=0;
 
 
     @Override
     public void cargarRecursos() {
+        regionLuzF1= cargarImagen("EscenaJuego/Fondos/Luces/Frente/frente1.png");
+        regionLuzF2= cargarImagen("EscenaJuego/Fondos/Luces/Frente/frente2.png");
+        regionLuzF3= cargarImagen("EscenaJuego/Fondos/Luces/Frente/frente3.png");
+        regionLuzF4= cargarImagen("EscenaJuego/Fondos/Luces/Frente/frente4.png");
+        regionLuzF5= cargarImagen("EscenaJuego/Fondos/Luces/Frente/frente5.png");
+        regionLuzF6= cargarImagen("EscenaJuego/Fondos/Luces/Frente/frente6.png");
+        regionLuzF7= cargarImagen("EscenaJuego/Fondos/Luces/Frente/frente7.png");
+        regionLuzF8= cargarImagen("EscenaJuego/Fondos/Luces/Frente/frente8.png");
+
         regionFondo = cargarImagen("EscenaJuego/Fondos/cielo1.png");
         regionFondoMedio= cargarImagen("EscenaJuego/Fondos/edificio_atras_1.png");
         regionFondoFrente=cargarImagen("EscenaJuego/Fondos/escenario_frente_1.png");
@@ -122,6 +148,16 @@ public class EscenaJuego extends EscenaBase {
 
     @Override
     public void crearEscena() {
+        spriteLuzF1=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF1);
+        spriteLuzF2=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF2);
+        spriteLuzF3=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF3);
+        spriteLuzF4=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF4);
+        spriteLuzF5=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF5);
+        spriteLuzF6=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF6);
+        spriteLuzF7=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF7);
+        spriteLuzF8=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF8);
+
+
         spriteFondo = cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionFondo);
         spriteFondoMedio=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA -250, regionFondoMedio);
         spriteFondoFrente=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionFondoFrente);
@@ -136,6 +172,32 @@ public class EscenaJuego extends EscenaBase {
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-2, spriteFondo));
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3, spriteFondoMedio));
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteFondoFrente));
+
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteLuzF1));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteLuzF2));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteLuzF3));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteLuzF4));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteLuzF5));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteLuzF6));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteLuzF7));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteLuzF8));
+        spriteLuzF1.setAlpha(0);
+        spriteLuzF2.setAlpha(0);
+        spriteLuzF3.setAlpha(0);
+        spriteLuzF4.setAlpha(0);
+        spriteLuzF5.setAlpha(0);
+        spriteLuzF6.setAlpha(0);
+        spriteLuzF7.setAlpha(0);
+        spriteLuzF8.setAlpha(0);
+        spriteLuzF1.setColor(0.8f,0.8f,0f);
+        spriteLuzF2.setColor(0.8f, 0.8f, 0f);
+        spriteLuzF3.setColor(0.8f, 0.8f, 0f);
+        spriteLuzF4.setColor(0.8f, 0.8f, 0f);
+        spriteLuzF5.setColor(0.8f, 0.8f, 0f);
+        spriteLuzF6.setColor(0.8f, 0.8f, 0f);
+        spriteLuzF7.setColor(0.8f, 0.8f, 0f);
+        spriteLuzF8.setColor(0.8f,0.8f,0f);
+
         setBackground(fondoAnimado);
 
         spritePlataformaEntrada=cargarSprite(ControlJuego.ANCHO_CAMARA/2-250,ControlJuego.ALTO_CAMARA/2-410, regionPlataformaEntrada);
@@ -334,7 +396,7 @@ public class EscenaJuego extends EscenaBase {
 
         contadorTiempo=contadorTiempo+1;
 
-            spritePlataformaEntrada.setPosition(spritePlataformaEntrada.getX() - 5, spritePlataformaEntrada.getY());
+        spritePlataformaEntrada.setPosition(spritePlataformaEntrada.getX() - 5, spritePlataformaEntrada.getY());
 
         if (spriteFoquin.collidesWith(spritePlataformaEntrada)) {
             foquinCae2 = false;
@@ -444,6 +506,9 @@ public class EscenaJuego extends EscenaBase {
             if(spriteFoquin.collidesWith(plataforma.getSpritePlataforma())){
                 plataforma.getSpritePlataforma().setColor(1f,1f,1f);
             }
+            if(spriteFoquin.collidesWith(plataforma.getSpritePlataforma())){
+                contadorLuz++;
+            }
 
             if (plataforma.getSpritePlataforma().getX() < -plataforma.getSpritePlataforma().getWidth()) {
                 detachChild(plataforma.getSpritePlataforma());
@@ -457,6 +522,31 @@ public class EscenaJuego extends EscenaBase {
             spriteFoquinRojo.setPosition(spriteFoquinRojo.getX(), spriteFoquinRojo.getY() - 12);
             spriteFoquinVerde.setPosition(spriteFoquinVerde.getX(), spriteFoquinVerde.getY() - 12);
             spriteFoquinAzul.setPosition(spriteFoquinAzul.getX(), spriteFoquinAzul.getY() - 12);
+        }
+
+        if(contadorLuz==50){
+            spriteLuzF1.setAlpha(1);
+        }
+        if(contadorLuz==100){
+            spriteLuzF2.setAlpha(1);
+        }
+        if(contadorLuz==150){
+            spriteLuzF3.setAlpha(1);
+        }
+        if(contadorLuz==200){
+            spriteLuzF4.setAlpha(1);
+        }
+        if(contadorLuz==250){
+            spriteLuzF5.setAlpha(1);
+        }
+        if(contadorLuz==300){
+            spriteLuzF6.setAlpha(1);
+        }
+        if(contadorLuz==350){
+            spriteLuzF7.setAlpha(1);
+        }
+        if(contadorLuz==400){
+            spriteLuzF8.setAlpha(1);
         }
 
         //si la vida de foquin es 0 pierdes
