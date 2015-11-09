@@ -1,6 +1,9 @@
 package mx.itesm.foquinrun;
 
 import android.view.KeyEvent;
+
+import org.andengine.engine.Engine;
+import org.andengine.engine.FixedStepEngine;
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
@@ -100,5 +103,9 @@ public class ControlJuego extends SimpleBaseGameActivity
         if (admEscenas!=null) {
             System.exit(0);
         }
+    }
+    @Override
+    public Engine onCreateEngine(EngineOptions pEngineOptions) {
+        return new FixedStepEngine(pEngineOptions,50);
     }
 }
