@@ -5,6 +5,8 @@ import android.widget.Switch;
 
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.JumpModifier;
+import org.andengine.entity.modifier.ParallelEntityModifier;
+import org.andengine.entity.scene.CameraScene;
 import org.andengine.entity.scene.background.AutoParallaxBackground;
 import org.andengine.entity.scene.background.ParallaxBackground;
 import org.andengine.entity.scene.menu.MenuScene;
@@ -14,7 +16,9 @@ import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.entity.text.Text;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.opengl.font.IFont;
 import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
@@ -65,6 +69,7 @@ public class EscenaJuego extends EscenaBase {
     private TiledTextureRegion regionBtnRojo;
     private TiledTextureRegion regionBtnVerde;
     private TiledTextureRegion regionBtnAzul;
+    private TiledTextureRegion regionBtnSaltar;
 
     private ITextureRegion regionPantallaPerdiste;
     private Sprite spritePantallaPerdiste;
@@ -117,7 +122,7 @@ public class EscenaJuego extends EscenaBase {
     private ITextureRegion regionPlataformaAzul;
 
     private float tiempoplataformas = 0;
-    private float LIMITE_TIEMPO = 1.3f;
+    private float LIMITE_TIEMPO = 1.6f;
 
     private boolean foquinSalta=false;
 
@@ -135,6 +140,18 @@ public class EscenaJuego extends EscenaBase {
     private int contadorLuz=0;
     private int cuentaRegresiva=200;
 
+    private int sumaplataforma=0;
+
+    private CameraScene escenaPausa;
+    private ITextureRegion regionPausa;
+    private ITextureRegion getRegionBtnPausa;
+
+    private boolean juegoCorriendo=true;
+    private int altura=0;
+
+    private Text txtPuntos;
+    private IFont fontMonster;
+    private int puntos = 0;
 
     @Override
     public void cargarRecursos() {
@@ -173,6 +190,7 @@ public class EscenaJuego extends EscenaBase {
         regionBtnRojo= cargarImagenMosaico("EscenaJuego/Botones/botonRojo.png", 240, 120, 1, 2);
         regionBtnVerde= cargarImagenMosaico("EscenaJuego/Botones/botonVerde.png", 240, 120, 1, 2);
         regionBtnAzul= cargarImagenMosaico("EscenaJuego/Botones/botonAzul.png", 240, 120, 1, 2);
+        regionBtnSaltar=cargarImagenMosaico("EscenaJuego/Botones/botonSaltar.png",240,120,1,2);
 
 
 
@@ -189,6 +207,9 @@ public class EscenaJuego extends EscenaBase {
 
         regionPantallaPausa= cargarImagen("EsenaPausa/fondo_pausa.png");
 
+        regionPausa= cargarImagen("EsenaPausa/fondo_pausa.png");
+
+        fontMonster = cargarFont("fonts/monster.ttf", 64, 0xFFFFFF00, "0123456789");
 
 
 
@@ -196,6 +217,21 @@ public class EscenaJuego extends EscenaBase {
 
     @Override
     public void crearEscena() {
+
+
+        Sprite btnPausa = new Sprite(regionBtnPausa.getWidth(), ControlJuego.ALTO_CAMARA - regionBtnPausa.getHeight(),
+                regionBtnPausa, actividadJuego.getVertexBufferObjectManager()) {
+            @Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                if (pSceneTouchEvent.isActionDown()) {
+                    pausarJuego();
+                }
+                return super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+            }
+        };
+        attachChild(btnPausa);
+        registerTouchArea(btnPausa);
+
         spriteLuzF1=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF1);
         spriteLuzF2=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF2);
         spriteLuzF3=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF3);
@@ -287,31 +323,39 @@ public class EscenaJuego extends EscenaBase {
         spriteFoquinCaeVerde.setAlpha(0);
         spriteFoquinCaeAzul.setAlpha(0);
 
+        ButtonSprite btnSaltar = new ButtonSprite(0, 0, regionBtnSaltar, actividadJuego.getVertexBufferObjectManager()) {
+            @Override
+            public boolean onAreaTouched(TouchEvent event, float x, float y) {
+                if (spriteFoquin.getY()==350 +altura) {
+                    foquinSalta=true;
+
+                    JumpModifier salto = new JumpModifier(1, spriteFoquin.getX(), spriteFoquin.getX(),
+                            spriteFoquin.getY(), spriteFoquin.getY(), -250);
+                    spriteFoquin.registerEntityModifier(salto);
+                    JumpModifier saltoRojo = new JumpModifier(1, spriteFoquinRojo.getX(), spriteFoquinRojo.getX(),
+                            spriteFoquinRojo.getY(), spriteFoquinRojo.getY(), -250);
+                    spriteFoquinRojo.registerEntityModifier(saltoRojo);
+                    JumpModifier saltoVerde = new JumpModifier(1, spriteFoquinVerde.getX(), spriteFoquinVerde.getX(),
+                            spriteFoquinVerde.getY(), spriteFoquinVerde.getY(), -250);
+                    spriteFoquinVerde.registerEntityModifier(saltoVerde);
+                    JumpModifier saltoAzul = new JumpModifier(1, spriteFoquinAzul.getX(), spriteFoquinAzul.getX(),
+                            spriteFoquinAzul.getY(), spriteFoquinAzul.getY(), -250);
+                    spriteFoquinAzul.registerEntityModifier(saltoAzul);
+                }
+                return super.onAreaTouched(event, x, y);
+            }
+        };
 
             ButtonSprite btnRojo = new ButtonSprite(0, 0, regionBtnRojo, actividadJuego.getVertexBufferObjectManager()) {
                 @Override
                 public boolean onAreaTouched(TouchEvent event, float x, float y) {
-                    if (spriteFoquin.getY() == 350) {
+                    if (spriteFoquin.getY()==350 +altura) {
+                        foquinSalta=true;
                         spriteFoquin.setAlpha(0);
                         spriteFoquinRojo.setAlpha(1);
                         spriteFoquinVerde.setAlpha(0);
                         spriteFoquinAzul.setAlpha(0);
-
-
-                        JumpModifier salto = new JumpModifier(1, spriteFoquin.getX(), spriteFoquin.getX(),
-                                spriteFoquin.getY(), spriteFoquin.getY(), -150);
-                        spriteFoquin.registerEntityModifier(salto);
-                        JumpModifier saltoRojo = new JumpModifier(1, spriteFoquinRojo.getX(), spriteFoquinRojo.getX(),
-                                spriteFoquinRojo.getY(), spriteFoquinRojo.getY(), -150);
-                        spriteFoquinRojo.registerEntityModifier(saltoRojo);
-                        JumpModifier saltoVerde = new JumpModifier(1, spriteFoquinVerde.getX(), spriteFoquinVerde.getX(),
-                                spriteFoquinVerde.getY(), spriteFoquinVerde.getY(), -150);
-                        spriteFoquinVerde.registerEntityModifier(saltoVerde);
-                        JumpModifier saltoAzul = new JumpModifier(1, spriteFoquinAzul.getX(), spriteFoquinAzul.getX(),
-                                spriteFoquinAzul.getY(), spriteFoquinAzul.getY(), -150);
-                        spriteFoquinAzul.registerEntityModifier(saltoAzul);
                     }
-
                     if (spriteFoquinRojo.getAlpha() == 0) {//permite que foquin cambie de color en el aire
                         spriteFoquin.setAlpha(0);
                         spriteFoquinRojo.setAlpha(1);
@@ -324,23 +368,11 @@ public class EscenaJuego extends EscenaBase {
             ButtonSprite btnVerde = new ButtonSprite(0, 0, regionBtnVerde, actividadJuego.getVertexBufferObjectManager()) {
                 @Override
                 public boolean onAreaTouched(TouchEvent event, float x, float y) {
-                    if (spriteFoquin.getY() == 350) {
+                    if (spriteFoquin.getY() == 350 +altura) {
                         spriteFoquin.setAlpha(0);
                         spriteFoquinRojo.setAlpha(0);
                         spriteFoquinVerde.setAlpha(1);
                         spriteFoquinAzul.setAlpha(0);
-                        JumpModifier salto = new JumpModifier(1, spriteFoquin.getX(), spriteFoquin.getX(),
-                                spriteFoquin.getY(), spriteFoquin.getY(), -150);
-                        spriteFoquin.registerEntityModifier(salto);
-                        JumpModifier saltoRojo = new JumpModifier(1, spriteFoquinRojo.getX(), spriteFoquinRojo.getX(),
-                                spriteFoquinRojo.getY(), spriteFoquinRojo.getY(), -150);
-                        spriteFoquinRojo.registerEntityModifier(saltoRojo);
-                        JumpModifier saltoVerde = new JumpModifier(1, spriteFoquinVerde.getX(), spriteFoquinVerde.getX(),
-                                spriteFoquinVerde.getY(), spriteFoquinVerde.getY(), -150);
-                        spriteFoquinVerde.registerEntityModifier(saltoVerde);
-                        JumpModifier saltoAzul = new JumpModifier(1, spriteFoquinAzul.getX(), spriteFoquinAzul.getX(),
-                                spriteFoquinAzul.getY(), spriteFoquinAzul.getY(), -150);
-                        spriteFoquinAzul.registerEntityModifier(saltoAzul);
                     }
                     if (spriteFoquinVerde.getAlpha() == 0) {
                         spriteFoquin.setAlpha(0);
@@ -355,23 +387,11 @@ public class EscenaJuego extends EscenaBase {
             ButtonSprite btnAzul = new ButtonSprite(0, 0, regionBtnAzul, actividadJuego.getVertexBufferObjectManager()) {
                 @Override
                 public boolean onAreaTouched(TouchEvent event, float x, float y) {
-                    if (spriteFoquin.getY() == 350) {//usar variable extra para compensar altruas de foquin
+                    if (spriteFoquin.getY() == 350 +altura) {//usar variable extra para compensar altruas de foquin
                         spriteFoquin.setAlpha(0);
                         spriteFoquinRojo.setAlpha(0);
                         spriteFoquinVerde.setAlpha(0);
                         spriteFoquinAzul.setAlpha(1);
-                        JumpModifier salto = new JumpModifier(1, spriteFoquin.getX(), spriteFoquin.getX(),
-                                spriteFoquin.getY(), spriteFoquin.getY(), -150);
-                        spriteFoquin.registerEntityModifier(salto);
-                        JumpModifier saltoRojo = new JumpModifier(1, spriteFoquinRojo.getX(), spriteFoquinRojo.getX(),
-                                spriteFoquinRojo.getY(), spriteFoquinRojo.getY(), -150);
-                        spriteFoquinRojo.registerEntityModifier(saltoRojo);
-                        JumpModifier saltoVerde = new JumpModifier(1, spriteFoquinVerde.getX(), spriteFoquinVerde.getX(),
-                                spriteFoquinVerde.getY(), spriteFoquinVerde.getY(), -150);
-                        spriteFoquinVerde.registerEntityModifier(saltoVerde);
-                        JumpModifier saltoAzul = new JumpModifier(1, spriteFoquinAzul.getX(), spriteFoquinAzul.getX(),
-                                spriteFoquinAzul.getY(), spriteFoquinAzul.getY(), -150);
-                        spriteFoquinAzul.registerEntityModifier(saltoAzul);
                     }
                     if (spriteFoquinAzul.getAlpha() == 0) {
                         spriteFoquin.setAlpha(0);
@@ -396,6 +416,11 @@ public class EscenaJuego extends EscenaBase {
             registerTouchArea(btnAzul);
             attachChild(btnAzul);
             btnAzul.setPosition(1200, 300);
+
+            registerTouchArea(btnSaltar);
+            attachChild(btnSaltar);
+            btnSaltar.setPosition(130,130);
+            btnSaltar.setScale(2);
 
 
 
@@ -439,6 +464,26 @@ public class EscenaJuego extends EscenaBase {
         spritePantalllaPausa=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionPantallaPausa);
         attachChild(spritePantalllaPausa);
         spritePantalllaPausa.setAlpha(0);
+        agregarTextoPuntos();
+    }
+
+    private void agregarTextoPuntos() {
+        txtPuntos=new Text(ControlJuego.ANCHO_CAMARA/2,ControlJuego.ALTO_CAMARA/2,
+                fontMonster,"0          ",actividadJuego.getVertexBufferObjectManager());
+        attachChild(txtPuntos);
+        txtPuntos.setAlpha(0);
+        txtPuntos.setPosition(740,275);
+
+    }
+
+    private void pausarJuego() {
+        if (juegoCorriendo) {
+            setChildScene(escenaPausa,false,true,false);
+            juegoCorriendo = false;
+        } else {
+            clearChildScene();
+            juegoCorriendo = true;
+        }
     }
 
     private void agregarMenu() {
@@ -508,7 +553,7 @@ public class EscenaJuego extends EscenaBase {
     @Override
     protected void onManagedUpdate(float pSecondsElapsed) {
         super.onManagedUpdate(pSecondsElapsed);
-
+        actulizarPuntos();
         contadorTiempo=contadorTiempo+1;
         cuentaRegresiva--;
 
@@ -559,7 +604,8 @@ public class EscenaJuego extends EscenaBase {
         }
         if(pausa==false) {
             if (cuentaRegresiva < 0) {
-                int colorplataforma = (int) (Math.floor(Math.random() * (3 - 1 + 1)) + 1);
+
+                int colorplataforma =(int) (Math.floor(Math.random() * (6 - 1 + 1)) + 1);
 
                 tiempoplataformas += pSecondsElapsed;//tiempo velocidad constante
                 if (tiempoplataformas > LIMITE_TIEMPO) {
@@ -600,6 +646,45 @@ public class EscenaJuego extends EscenaBase {
                         attachChild(nuevoPlataformaAzul.getSpritePlataforma());
 
                     }
+                    if (colorplataforma == 4) {
+                        Sprite spritePlataformaRoja = cargarSprite(ControlJuego.ANCHO_CAMARA + regionPlataformaRoja.getWidth(),
+                                (ControlJuego.ALTO_CAMARA - regionPlataformaRoja.getHeight()) +
+                                        regionPlataformaRoja.getHeight() -400, regionPlataformaRoja);
+                        Plataforma nuevoPlataformaRoja = new Plataforma();
+                        nuevoPlataformaRoja.setSprite(spritePlataformaRoja);
+                        nuevoPlataformaRoja.setColor(1);
+                        nuevoPlataformaRoja.setAltura(1);
+                        nuevoPlataformaRoja.getSpritePlataforma().setColor(0.4f, 0f, 0f);
+                        listaPlataformas.add(nuevoPlataformaRoja);
+                        attachChild(nuevoPlataformaRoja.getSpritePlataforma());
+
+                    }
+                    if (colorplataforma == 5) {
+                        Sprite spritePlataformaVerde = cargarSprite(ControlJuego.ANCHO_CAMARA + regionPlataformaVerde.getWidth(),
+                                (ControlJuego.ALTO_CAMARA - regionPlataformaVerde.getHeight()) +
+                                        regionPlataformaVerde.getHeight() - 400, regionPlataformaVerde);
+                        Plataforma nuevoPlataformaVerde = new Plataforma();
+                        nuevoPlataformaVerde.setSprite(spritePlataformaVerde);
+                        nuevoPlataformaVerde.setColor(2);
+                        nuevoPlataformaVerde.setAltura(1);
+                        nuevoPlataformaVerde.getSpritePlataforma().setColor(0f, 0.4f, 0f);
+                        listaPlataformas.add(nuevoPlataformaVerde);
+                        attachChild(nuevoPlataformaVerde.getSpritePlataforma());
+
+                    }
+                    if (colorplataforma == 6) {
+                        Sprite spritePlataformaAzul = cargarSprite(ControlJuego.ANCHO_CAMARA + regionPlataformaAzul.getWidth(),
+                                (ControlJuego.ALTO_CAMARA - regionPlataformaAzul.getHeight()) +
+                                        regionPlataformaAzul.getHeight() - 400, regionPlataformaAzul);
+                        Plataforma nuevoPlataformaAzul = new Plataforma();
+                        nuevoPlataformaAzul.setSprite(spritePlataformaAzul);
+                        nuevoPlataformaAzul.setColor(3);
+                        nuevoPlataformaAzul.setAltura(1);
+                        nuevoPlataformaAzul.getSpritePlataforma().setColor(0f, 0f, 0.4f);
+                        listaPlataformas.add(nuevoPlataformaAzul);
+                        attachChild(nuevoPlataformaAzul.getSpritePlataforma());
+
+                    }
                 }
 
                 if (spritePlataformaEntrada.getX() + spritePlataformaEntrada.getWidth() + 80 < 0) {
@@ -619,41 +704,54 @@ public class EscenaJuego extends EscenaBase {
 
                     if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma())) {
                         contadorcolision = 1;
+                        if(spriteFoquin.collidesWith(plataforma.getSpritePlataforma())&&
+                                plataforma.getAltura()==0 &&spriteFoquin.getY()>330) {
 
-                        if (spriteFoquin.getY() < 350 && spriteFoquin.getY() > 330) {
                             spriteFoquin.setPosition(spriteFoquin.getX(), 350);
                             spriteFoquinRojo.setPosition(spriteFoquinRojo.getX(), 350);
                             spriteFoquinVerde.setPosition(spriteFoquinVerde.getX(), 350);
                             spriteFoquinAzul.setPosition(spriteFoquinAzul.getX(), 350);
+                            altura=0;
                         }
+                        //arreglar para que foquin caiga de las  plataforma de arriba !!
+                        if(spriteFoquin.collidesWith(plataforma.getSpritePlataforma())&&
+                                plataforma.getAltura()==1 && spriteFoquin.getY()>330) {
 
-                    } else {
+                            spriteFoquin.setPosition(spriteFoquin.getX(), 550);
+                            spriteFoquinRojo.setPosition(spriteFoquinRojo.getX(), 550);
+                            spriteFoquinVerde.setPosition(spriteFoquinVerde.getX(), 550);
+                            spriteFoquinAzul.setPosition(spriteFoquinAzul.getX(), 550);
+                            altura=200;
+                        }
+                    }
+                    else {
                         contadorcolision = 0;
                     }
 
+
                     if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma()) &&
-                            spriteFoquinRojo.getAlpha() == 1 && plataforma.getColor() == 2) {
+                            spriteFoquinRojo.getAlpha() == 1 && plataforma.getColor() == 2 && foquinColor==0) {
                         vidaFoquin = 0;
                     }
                     if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma()) &&
-                            spriteFoquinRojo.getAlpha() == 1 && plataforma.getColor() == 3) {
+                            spriteFoquinRojo.getAlpha() == 1 && plataforma.getColor() == 3 && foquinColor==0) {
                         vidaFoquin = 0;
                     }
 
                     if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma()) &&
-                            spriteFoquinVerde.getAlpha() == 1 && plataforma.getColor() == 1) {
+                            spriteFoquinVerde.getAlpha() == 1 && plataforma.getColor() == 1&& foquinColor==0) {
                         vidaFoquin = 0;
                     }
                     if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma()) &&
-                            spriteFoquinVerde.getAlpha() == 1 && plataforma.getColor() == 3) {
+                            spriteFoquinVerde.getAlpha() == 1 && plataforma.getColor() == 3&& foquinColor==0) {
                         vidaFoquin = 0;
                     }
                     if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma()) &&
-                            spriteFoquinAzul.getAlpha() == 1 && plataforma.getColor() == 1) {
+                            spriteFoquinAzul.getAlpha() == 1 && plataforma.getColor() == 1&& foquinColor==0) {
                         vidaFoquin = 0;
                     }
                     if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma()) &&
-                            spriteFoquinAzul.getAlpha() == 1 && plataforma.getColor() == 2) {
+                            spriteFoquinAzul.getAlpha() == 1 && plataforma.getColor() == 2&& foquinColor==0) {
                         vidaFoquin = 0;
                     }
                     if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma())) {
@@ -672,7 +770,12 @@ public class EscenaJuego extends EscenaBase {
             }
         }
 
-
+        if (contadorTiempo>350 && perdiste==false){
+            puntos=puntos+1;
+        }
+        if(perdiste==true){
+            txtPuntos.setAlpha(1);
+        }
         if (contadorcolision == 0 && foquinCae3 == false) {
             spriteFoquin.setPosition(spriteFoquin.getX(), spriteFoquin.getY() - 12);
             spriteFoquinRojo.setPosition(spriteFoquinRojo.getX(), spriteFoquinRojo.getY() - 12);
@@ -745,6 +848,7 @@ public class EscenaJuego extends EscenaBase {
             spriteFoquinVerde.setPosition(-300,-300);
             spriteFoquinAzul.setPosition(-300,-300);
         }
+        //animacion de Foquin cayendo
         if(perdiste==true &&spriteFoquinCaeRojo.getAlpha()==1){
             spriteFoquinCaeRojo.setPosition(spriteFoquinCaeRojo.getX(), spriteFoquinCaeRojo.getY() -8);
             spriteFoquinCaeVerde.setPosition(spriteFoquinCaeVerde.getX(), spriteFoquinCaeVerde.getY() -8);
@@ -773,6 +877,9 @@ public class EscenaJuego extends EscenaBase {
 
     }
 
+    private void actulizarPuntos() {
+        txtPuntos.setText(""+puntos);
+    }
 
 
     @Override

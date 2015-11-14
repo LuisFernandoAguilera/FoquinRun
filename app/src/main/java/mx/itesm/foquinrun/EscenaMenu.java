@@ -8,10 +8,12 @@ import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.scene.menu.item.SpriteMenuItem;
 import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
+import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.opengl.util.GLState;
 
 /**
@@ -29,6 +31,18 @@ public class EscenaMenu extends EscenaBase
     private ITextureRegion regionBtnJugar;
     private ITextureRegion regionBtnBoton;
 
+    private ITextureRegion regionMundo;
+    private Sprite spriteMundo;
+
+    private AnimatedSprite spriteFoquin;
+    private TiledTextureRegion regionFoquin;
+    private AnimatedSprite spriteFoquinRojo;
+    private TiledTextureRegion regionFoquinRojo;
+    private AnimatedSprite spriteFoquinVerde;
+    private TiledTextureRegion regionFoquinVerde;
+    private AnimatedSprite spriteFoquinAzul;
+    private TiledTextureRegion regionFoquinAzul;
+
 
     private Sprite spriteFondo;
 
@@ -39,17 +53,25 @@ public class EscenaMenu extends EscenaBase
     private final int OPCION_JUGAR = 1;
     private final int OPCION_BOTON=2;
 
+    private int angulo=0;
+    private int contador=0;
 
     @Override
     public void cargarRecursos() {
 
-        regionFondo = cargarImagen("Menu/Inicio_Neon_sin_botones.png");
+        regionFondo = cargarImagen("Menu/Inicio_Neon.png");
 
 
         regionBtnAcercaDe = cargarImagen("Menu/Opciones.png");
         regionBtnJugar = cargarImagen("Menu/Play.png");
         regionBtnBoton= cargarImagen("Menu/Menu.png");
 
+        regionMundo= cargarImagen("Pantalla/mundo gira sin transparencia.png");
+
+        regionFoquin= cargarImagenMosaico("EscenaJuego/foquin.png", 1000, 280, 1, 5);
+        regionFoquinRojo= cargarImagenMosaico("EscenaJuego/FoquinRojo.png", 1000, 280, 1, 5);
+        regionFoquinVerde= cargarImagenMosaico("EscenaJuego/FoquinVerde.png", 1000, 280, 1, 5);
+        regionFoquinAzul= cargarImagenMosaico("EscenaJuego/FoquinAzul.png", 1000, 280, 1, 5);
 
     }
 
@@ -60,6 +82,40 @@ public class EscenaMenu extends EscenaBase
         SpriteBackground fondo = new SpriteBackground(1,1,1,spriteFondo);
         setBackground(fondo);
         setBackgroundEnabled(true);
+
+        spriteMundo=cargarSprite(ControlJuego.ALTO_CAMARA/2-250, ControlJuego.ALTO_CAMARA/2-300, regionMundo);
+        attachChild(spriteMundo);
+
+        spriteFoquin = new AnimatedSprite(ControlJuego.ALTO_CAMARA / 2,
+                ControlJuego.ALTO_CAMARA / 2, regionFoquin,
+                actividadJuego.getVertexBufferObjectManager());
+        spriteFoquin.animate(100);
+        attachChild(spriteFoquin);
+        spriteFoquin.setPosition(170, 410);
+
+        spriteFoquinRojo = new AnimatedSprite(ControlJuego.ALTO_CAMARA / 2,
+                ControlJuego.ALTO_CAMARA / 2, regionFoquinRojo,
+                actividadJuego.getVertexBufferObjectManager());
+        spriteFoquinRojo.animate(100);
+        attachChild(spriteFoquinRojo);
+        spriteFoquinRojo.setPosition(170, 410);
+        spriteFoquinRojo.setAlpha(0);
+
+        spriteFoquinVerde = new AnimatedSprite(ControlJuego.ALTO_CAMARA / 2,
+                ControlJuego.ALTO_CAMARA / 2, regionFoquinVerde,
+                actividadJuego.getVertexBufferObjectManager());
+        spriteFoquinVerde.animate(100);
+        attachChild(spriteFoquinVerde);
+        spriteFoquinVerde.setPosition(170, 410);
+        spriteFoquinVerde.setAlpha(0);
+
+        spriteFoquinAzul = new AnimatedSprite(ControlJuego.ALTO_CAMARA / 2,
+                ControlJuego.ALTO_CAMARA / 2, regionFoquinAzul,
+                actividadJuego.getVertexBufferObjectManager());
+        spriteFoquinAzul.animate(100);
+        attachChild(spriteFoquinAzul);
+        spriteFoquinAzul.setPosition(170, 410);
+        spriteFoquinAzul.setAlpha(0);
 
         agregarMenu();
     }
@@ -132,6 +188,41 @@ public class EscenaMenu extends EscenaBase
     @Override
     protected void onManagedUpdate(float pSecondsElapsed) {
         super.onManagedUpdate(pSecondsElapsed);
+
+        spriteMundo.setRotation(angulo);
+        angulo--;
+        if(angulo==-360){
+            angulo=0;
+        }
+
+        contador++;
+        if(contador>0&& contador<180){
+            spriteFoquin.setAlpha(1);
+            spriteFoquinRojo.setAlpha(0);
+            spriteFoquinVerde.setAlpha(0);
+            spriteFoquinAzul.setAlpha(0);
+        }
+        if(contador>180&& contador<360){
+            spriteFoquin.setAlpha(0);
+            spriteFoquinRojo.setAlpha(1);
+            spriteFoquinVerde.setAlpha(0);
+            spriteFoquinAzul.setAlpha(0);
+        }
+        if(contador>360&& contador<540){
+            spriteFoquin.setAlpha(0);
+            spriteFoquinRojo.setAlpha(0);
+            spriteFoquinVerde.setAlpha(1);
+            spriteFoquinAzul.setAlpha(0);
+        }
+        if(contador>540&& contador<720){
+            spriteFoquin.setAlpha(0);
+            spriteFoquinRojo.setAlpha(0);
+            spriteFoquinVerde.setAlpha(0);
+            spriteFoquinAzul.setAlpha(1);
+        }
+        if(contador==720){
+            contador=0;
+        }
 
     }
 

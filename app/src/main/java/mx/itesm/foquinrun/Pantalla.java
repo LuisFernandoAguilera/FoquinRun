@@ -47,15 +47,20 @@ public class Pantalla extends EscenaBase {
     private ITextureRegion regionBtnJugar;
     private ITextureRegion regionBtnSonido;
     private ITextureRegion reguionBtnMusica;
+    private ITextureRegion regionFlechaDerecha;
+    private ITextureRegion regionFlechaIzquierda;
 
     private MenuScene menu;
 
     private final int OPCION_JUGAR = 0;
     private final int OPCION_SONIDO=1;
     private final int OCION_MUSICA=2;
+    private final int OPCION_FLECHAD=3;
+    private final int OPCION_FLECHAI=4;
 
     private ITextureRegion regionMundo;
     private Sprite spriteMundo;
+
 
     @Override
     public void cargarRecursos() {
@@ -72,7 +77,10 @@ public class Pantalla extends EscenaBase {
         regionBtnSonido=cargarImagen("Pantalla/Sonido.png");
         reguionBtnMusica=cargarImagen("Pantalla/Musica.png");
 
-        regionMundo= cargarImagen("Pantalla/mundo.png");
+        regionMundo= cargarImagen("Pantalla/mundo gira sin transparencia.png");
+
+        regionFlechaDerecha= cargarImagen("Pantalla/flechaderecha.png");
+        regionFlechaIzquierda= cargarImagen("Pantalla/flechaizquierda.png");
 
         regionPersonajes= cargarImagen("Pantalla/Personajes.png");
 
@@ -98,7 +106,6 @@ public class Pantalla extends EscenaBase {
 
         spriteMundo=cargarSprite(ControlJuego.ALTO_CAMARA/2+600, ControlJuego.ALTO_CAMARA/2, regionMundo);
         attachChild(spriteMundo);
-        spriteMundo.setScale(2);
 
         spritePersonajes=cargarSprite(ControlJuego.ANCHO_CAMARA/2, ControlJuego.ALTO_CAMARA/2, regionPersonajes);
         attachChild(spritePersonajes);
@@ -125,18 +132,25 @@ public class Pantalla extends EscenaBase {
                 regionBtnSonido, actividadJuego.getVertexBufferObjectManager()), 1.5f, 1);
         IMenuItem opcionMusica = new ScaleMenuItemDecorator(new SpriteMenuItem(OCION_MUSICA,
                 reguionBtnMusica, actividadJuego.getVertexBufferObjectManager()), 1.5f, 1);
+        IMenuItem opcionFlechaD = new ScaleMenuItemDecorator(new SpriteMenuItem(OPCION_FLECHAD,
+                regionFlechaDerecha, actividadJuego.getVertexBufferObjectManager()), 1.5f, 1);
+        IMenuItem opcionFlechaI = new ScaleMenuItemDecorator(new SpriteMenuItem(OPCION_FLECHAI,
+                regionFlechaIzquierda, actividadJuego.getVertexBufferObjectManager()), 1.5f, 1);
 
         menu.addMenuItem(opcionJugar);
         menu.addMenuItem(opcionMusica);
         menu.addMenuItem(opcionSonido);
+        menu.addMenuItem(opcionFlechaD);
+        menu.addMenuItem(opcionFlechaI);
 
         menu.buildAnimations();
         menu.setBackgroundEnabled(false);
 
         opcionJugar.setPosition(-300, -330);
-
         opcionSonido.setPosition(-550, 360);
         opcionMusica.setPosition(-460, 360);
+        opcionFlechaD.setPosition(-100,-100);
+        opcionFlechaI.setPosition(-500,-100);
 
 
         menu.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
@@ -161,6 +175,15 @@ public class Pantalla extends EscenaBase {
 
 
                         break;
+                    case OPCION_FLECHAD:
+
+
+                        break;
+                    case OPCION_FLECHAI:
+
+                        
+                        break;
+
 
                 }
                 return true;

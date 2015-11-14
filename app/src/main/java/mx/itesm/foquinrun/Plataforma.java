@@ -9,6 +9,7 @@ public class Plataforma {
 
     private Sprite sprite;
     private int color;
+    private int altura;
 
 
     public Sprite getSpritePlataforma() {
@@ -30,5 +31,9 @@ public class Plataforma {
         this.color= colorPlataforma;
     }
 
+    public void setAltura(int alturaplataforma){
+        this.altura= alturaplataforma;
+    }
+    public int getAltura(){return altura;}
 
 }
