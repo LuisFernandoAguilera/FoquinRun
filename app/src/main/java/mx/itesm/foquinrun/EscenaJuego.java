@@ -28,6 +28,28 @@ import java.util.ArrayList;
 
 
 public class EscenaJuego extends EscenaBase {
+    private ITextureRegion regionAngelOff;
+    private Sprite spriteAngelOff;
+    private ITextureRegion regionBigBenOff;
+    private Sprite spriteBigBenOff;
+    private ITextureRegion regionEiffelOff;
+    private Sprite spriteEiffelOff;
+    private ITextureRegion regionLibertadOff;
+    private Sprite spriteLibertadOff;
+    private ITextureRegion regionRendentorOff;
+    private Sprite spriteRendentorOff;
+
+    private ITextureRegion regionAngelOn;
+    private Sprite spriteAngelOn;
+    private ITextureRegion regionBigBenOn;
+    private Sprite spriteBigBenOn;
+    private ITextureRegion regionEiffelOn;
+    private Sprite spriteEiffelOn;
+    private ITextureRegion regionLibertadOn;
+    private Sprite spriteLibertadOn;
+    private ITextureRegion regionRendentorOn;
+    private Sprite spriteRendentorOn;
+
     private ITextureRegion regionLuzF1;
     private Sprite spriteLuzF1;
     private ITextureRegion regionLuzF2;
@@ -44,6 +66,23 @@ public class EscenaJuego extends EscenaBase {
     private Sprite spriteLuzF7;
     private ITextureRegion regionLuzF8;
     private Sprite spriteLuzF8;
+
+    private ITextureRegion regionLuzA1;
+    private Sprite spriteLuzA1;
+    private ITextureRegion regionLuzA2;
+    private Sprite spriteLuzA2;
+    private ITextureRegion regionLuzA3;
+    private Sprite spriteLuzA3;
+    private ITextureRegion regionLuzA4;
+    private Sprite spriteLuzA4;
+    private ITextureRegion regionLuzA5;
+    private Sprite spriteLuzA5;
+    private ITextureRegion regionLuzA6;
+    private Sprite spriteLuzA6;
+    private ITextureRegion regionLuzA7;
+    private Sprite spriteLuzA7;
+    private ITextureRegion regionLuzA8;
+    private Sprite spriteLuzA8;
 
     private ITextureRegion region3p;
     private ITextureRegion region2p;
@@ -120,7 +159,9 @@ public class EscenaJuego extends EscenaBase {
     private ITextureRegion regionPlataformaRoja;
     private ITextureRegion regionPlataformaVerde;
     private ITextureRegion regionPlataformaAzul;
-
+    private ITextureRegion regionPlataformaRojaChica;
+    private ITextureRegion regionPlataformaVerdeChica;
+    private ITextureRegion regionPlataformaAzulChica;
     private float tiempoplataformas = 0;
     private float LIMITE_TIEMPO = 1.6f;
 
@@ -152,9 +193,22 @@ public class EscenaJuego extends EscenaBase {
     private Text txtPuntos;
     private IFont fontMonster;
     private int puntos = 0;
+    private int monumento=0;
+    private boolean monumentoluz=false;
 
     @Override
     public void cargarRecursos() {
+        regionAngelOff=cargarImagen("EscenaJuego/Monumentos/angel off.png");
+        regionBigBenOff=cargarImagen("EscenaJuego/Monumentos/big ben off.png");
+        regionEiffelOff=cargarImagen("EscenaJuego/Monumentos/eiffel off.png");
+        regionLibertadOff=cargarImagen("EscenaJuego/Monumentos/libertad off.png");
+        regionRendentorOff=cargarImagen("EscenaJuego/Monumentos/redentor off.png");
+        regionAngelOn=cargarImagen("EscenaJuego/Monumentos/angel on.png");
+        regionBigBenOn=cargarImagen("EscenaJuego/Monumentos/big ben on.png");
+        regionEiffelOn=cargarImagen("EscenaJuego/Monumentos/eiffel on.png");
+        regionLibertadOn=cargarImagen("EscenaJuego/Monumentos/libertad on.png");
+        regionRendentorOn=cargarImagen("EscenaJuego/Monumentos/redentor on.png");
+
         regionLuzF1= cargarImagen("EscenaJuego/Fondos/Luces/Frente/frente1.png");
         regionLuzF2= cargarImagen("EscenaJuego/Fondos/Luces/Frente/frente2.png");
         regionLuzF3= cargarImagen("EscenaJuego/Fondos/Luces/Frente/frente3.png");
@@ -163,6 +217,16 @@ public class EscenaJuego extends EscenaBase {
         regionLuzF6= cargarImagen("EscenaJuego/Fondos/Luces/Frente/frente6.png");
         regionLuzF7= cargarImagen("EscenaJuego/Fondos/Luces/Frente/frente7.png");
         regionLuzF8= cargarImagen("EscenaJuego/Fondos/Luces/Frente/frente8.png");
+
+        regionLuzA1= cargarImagen("EscenaJuego/Fondos/Luces/Atras/1.png");
+        regionLuzA2= cargarImagen("EscenaJuego/Fondos/Luces/Atras/2.png");
+        regionLuzA3= cargarImagen("EscenaJuego/Fondos/Luces/Atras/3.png");
+        regionLuzA4= cargarImagen("EscenaJuego/Fondos/Luces/Atras/4.png");
+        regionLuzA5= cargarImagen("EscenaJuego/Fondos/Luces/Atras/5.png");
+        regionLuzA6= cargarImagen("EscenaJuego/Fondos/Luces/Atras/6.png");
+        regionLuzA7= cargarImagen("EscenaJuego/Fondos/Luces/Atras/7.png");
+        regionLuzA8= cargarImagen("EscenaJuego/Fondos/Luces/Atras/8.png");
+
 
         region3p=cargarImagen("EscenaJuego/3,2,1/3prendido.png");
         region2p=cargarImagen("EscenaJuego/3,2,1/2prendido.png");
@@ -178,7 +242,7 @@ public class EscenaJuego extends EscenaBase {
         regionPantallaPerdiste=cargarImagen("EscenaJuego/Perdiste/Perdida_neon.png");
 
 
-        regionFoquin= cargarImagenMosaico("EscenaJuego/foquin.png", 1000, 280, 1, 5);
+        regionFoquin= cargarImagenMosaico("EscenaJuego/Foquin.png", 1000, 280, 1, 5);
         regionFoquinRojo= cargarImagenMosaico("EscenaJuego/FoquinRojo.png", 1000, 280, 1, 5);
         regionFoquinVerde=cargarImagenMosaico("EscenaJuego/FoquinVerde.png", 1000, 280, 1, 5);
         regionFoquinAzul=cargarImagenMosaico("EscenaJuego/FoquinAzul.png", 1000, 280, 1, 5);
@@ -190,13 +254,16 @@ public class EscenaJuego extends EscenaBase {
         regionBtnRojo= cargarImagenMosaico("EscenaJuego/Botones/botonRojo.png", 240, 120, 1, 2);
         regionBtnVerde= cargarImagenMosaico("EscenaJuego/Botones/botonVerde.png", 240, 120, 1, 2);
         regionBtnAzul= cargarImagenMosaico("EscenaJuego/Botones/botonAzul.png", 240, 120, 1, 2);
-        regionBtnSaltar=cargarImagenMosaico("EscenaJuego/Botones/botonSaltar.png",240,120,1,2);
+        regionBtnSaltar=cargarImagenMosaico("EscenaJuego/Botones/botonSaltar.png", 240, 120, 1, 2);
 
 
 
         regionPlataformaRoja= cargarImagen("EscenaJuego/Botones/Plataformas/plataformaRojaPrendida.png");
         regionPlataformaVerde= cargarImagen("EscenaJuego/Botones/Plataformas/plataformaVerdePrendida.png");
         regionPlataformaAzul= cargarImagen("EscenaJuego/Botones/Plataformas/plataformaAzulPrendida.png");
+        regionPlataformaRojaChica= cargarImagen("EscenaJuego/Botones/Plataformas/plataformarojachica.png");
+        regionPlataformaVerdeChica= cargarImagen("EscenaJuego/Botones/Plataformas/plataformaverdechica.png");
+        regionPlataformaAzulChica= cargarImagen("EscenaJuego/Botones/Plataformas/plataformaroazulchica.png");
 
         regionPlataformaEntrada=cargarImagen("EscenaJuego/Botones/Plataformas/plataformaEntrada.png");
 
@@ -241,6 +308,25 @@ public class EscenaJuego extends EscenaBase {
         spriteLuzF7=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF7);
         spriteLuzF8=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF8);
 
+        spriteLuzA1=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2+150, regionLuzA1);
+        spriteLuzA2=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2+150, regionLuzA2);
+        spriteLuzA3=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2+150, regionLuzA3);
+        spriteLuzA4=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2+150, regionLuzA4);
+        spriteLuzA5=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2+150, regionLuzA5);
+        spriteLuzA6=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2+150, regionLuzA6);
+        spriteLuzA7=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2+150, regionLuzA7);
+        spriteLuzA8=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2+150, regionLuzA8);
+
+        spriteAngelOff=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionAngelOff);
+        spriteAngelOn=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionAngelOn);
+        spriteBigBenOff=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionBigBenOff);
+        spriteBigBenOn=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionBigBenOn);
+        spriteEiffelOff=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionEiffelOff);
+        spriteEiffelOn=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionEiffelOn);
+        spriteLibertadOff=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLibertadOff);
+        spriteLibertadOn=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLibertadOn);
+        spriteRendentorOff=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionRendentorOff);
+        spriteRendentorOn=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionRendentorOn);
 
         spriteFondo = cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionFondo);
         spriteFondoMedio=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA -250, regionFondoMedio);
@@ -255,6 +341,27 @@ public class EscenaJuego extends EscenaBase {
         AutoParallaxBackground fondoAnimado = new AutoParallaxBackground(1, 1, 1, 5);
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-2, spriteFondo));
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3, spriteFondoMedio));
+
+
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3, spriteLuzA1));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3, spriteLuzA2));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3, spriteLuzA3));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3, spriteLuzA4));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3, spriteLuzA5));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3, spriteLuzA6));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3, spriteLuzA7));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3, spriteLuzA8));
+
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10, spriteAngelOff));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10, spriteAngelOn));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10, spriteBigBenOff));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10, spriteBigBenOn));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10, spriteEiffelOff));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10, spriteEiffelOn));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10, spriteRendentorOff));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10, spriteRendentorOn));
+
+
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteFondoFrente));
 
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteLuzF1));
@@ -265,6 +372,16 @@ public class EscenaJuego extends EscenaBase {
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteLuzF6));
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteLuzF7));
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteLuzF8));
+
+        spriteAngelOff.setAlpha(1);
+        spriteAngelOn.setAlpha(0);
+        spriteBigBenOff.setAlpha(0);
+        spriteBigBenOn.setAlpha(0);
+        spriteEiffelOff.setAlpha(0);
+        spriteEiffelOn.setAlpha(0);
+        spriteRendentorOff.setAlpha(0);
+        spriteRendentorOn.setAlpha(0);
+
         spriteLuzF1.setAlpha(0);
         spriteLuzF2.setAlpha(0);
         spriteLuzF3.setAlpha(0);
@@ -273,15 +390,16 @@ public class EscenaJuego extends EscenaBase {
         spriteLuzF6.setAlpha(0);
         spriteLuzF7.setAlpha(0);
         spriteLuzF8.setAlpha(0);
-        spriteLuzF1.setColor(0.8f, 0.8f, 0f);
-        spriteLuzF2.setColor(0.8f, 0.8f, 0f);
-        spriteLuzF3.setColor(0.8f, 0.8f, 0f);
-        spriteLuzF4.setColor(0.8f, 0.8f, 0f);
-        spriteLuzF5.setColor(0.8f, 0.8f, 0f);
-        spriteLuzF6.setColor(0.8f, 0.8f, 0f);
-        spriteLuzF7.setColor(0.8f, 0.8f, 0f);
-        spriteLuzF8.setColor(0.8f, 0.8f, 0f);
+        spriteLuzA1.setAlpha(0);
+        spriteLuzA2.setAlpha(0);
+        spriteLuzA3.setAlpha(0);
+        spriteLuzA4.setAlpha(0);
+        spriteLuzA5.setAlpha(0);
+        spriteLuzA6.setAlpha(0);
+        spriteLuzA7.setAlpha(0);
+        spriteLuzA8.setAlpha(0);
 
+        //CUENTA REGRESIVA
         sprite1p=cargarSprite(ControlJuego.ANCHO_CAMARA/2,ControlJuego.ALTO_CAMARA/2, region1p);
         sprite2p=cargarSprite(ControlJuego.ANCHO_CAMARA/2,ControlJuego.ALTO_CAMARA/2, region2p);
         sprite3p=cargarSprite(ControlJuego.ANCHO_CAMARA/2,ControlJuego.ALTO_CAMARA/2, region3p);
@@ -301,6 +419,8 @@ public class EscenaJuego extends EscenaBase {
         sprite1a.setAlpha(0);
         sprite2a.setAlpha(0);
         sprite3a.setAlpha(0);
+
+
 
         setBackground(fondoAnimado);
 
@@ -685,6 +805,42 @@ public class EscenaJuego extends EscenaBase {
                         attachChild(nuevoPlataformaAzul.getSpritePlataforma());
 
                     }
+                    if (colorplataforma == 7) {
+                        Sprite spritePlataformaRojaChica = cargarSprite(ControlJuego.ANCHO_CAMARA + regionPlataformaRojaChica.getWidth(),
+                                (ControlJuego.ALTO_CAMARA - regionPlataformaRojaChica.getHeight()) +
+                                        regionPlataformaRojaChica.getHeight() - 600, regionPlataformaRojaChica);
+                        Plataforma nuevoPlataformaRojaChica = new Plataforma();
+                        nuevoPlataformaRojaChica.setSprite(spritePlataformaRojaChica);
+                        nuevoPlataformaRojaChica.setColor(1);
+                        nuevoPlataformaRojaChica.getSpritePlataforma().setColor(0.4f, 0f, 0f);
+                        listaPlataformas.add(nuevoPlataformaRojaChica);
+                        attachChild(nuevoPlataformaRojaChica.getSpritePlataforma());
+
+                    }
+                    if (colorplataforma == 8) {
+                        Sprite spritePlataformaVerdeChica = cargarSprite(ControlJuego.ANCHO_CAMARA + regionPlataformaVerdeChica.getWidth(),
+                                (ControlJuego.ALTO_CAMARA - regionPlataformaVerdeChica.getHeight()) +
+                                        regionPlataformaVerdeChica.getHeight() - 600, regionPlataformaVerdeChica);
+                        Plataforma nuevoPlataformaVerdeChica = new Plataforma();
+                        nuevoPlataformaVerdeChica.setSprite(spritePlataformaVerdeChica);
+                        nuevoPlataformaVerdeChica.setColor(2);
+                        nuevoPlataformaVerdeChica.getSpritePlataforma().setColor(0f, 0.4f, 0f);
+                        listaPlataformas.add(nuevoPlataformaVerdeChica);
+                        attachChild(nuevoPlataformaVerdeChica.getSpritePlataforma());
+
+                    }
+                    if (colorplataforma == 9) {
+                        Sprite spritePlataformaAzulChica = cargarSprite(ControlJuego.ANCHO_CAMARA + regionPlataformaAzulChica.getWidth(),
+                                (ControlJuego.ALTO_CAMARA - regionPlataformaAzulChica.getHeight()) +
+                                        regionPlataformaAzulChica.getHeight() - 600, regionPlataformaAzulChica);
+                        Plataforma nuevoPlataformaAzulChica = new Plataforma();
+                        nuevoPlataformaAzulChica.setSprite(spritePlataformaAzulChica);
+                        nuevoPlataformaAzulChica.setColor(3);
+                        nuevoPlataformaAzulChica.getSpritePlataforma().setColor(0f, 0f, 0.4f);
+                        listaPlataformas.add(nuevoPlataformaAzulChica);
+                        attachChild(nuevoPlataformaAzulChica.getSpritePlataforma());
+
+                    }
                 }
 
                 if (spritePlataformaEntrada.getX() + spritePlataformaEntrada.getWidth() + 80 < 0) {
@@ -694,7 +850,7 @@ public class EscenaJuego extends EscenaBase {
                 for (int i = listaPlataformas.size() - 1; i >= 0; i--) {
                     Plataforma plataforma = listaPlataformas.get(i);
                     if (perdiste == false) {
-                        plataforma.mover(-8, 0);
+                        plataforma.mover(-9, 0);
                     }
                     if (perdiste == true) {
                         detachChild(plataforma.getSpritePlataforma());
@@ -807,6 +963,95 @@ public class EscenaJuego extends EscenaBase {
         if(contadorLuz==400){
             spriteLuzF8.setAlpha(1);
         }
+        if(contadorLuz==450){
+            spriteLuzA1.setAlpha(1);
+        }
+        if(contadorLuz==500){
+            spriteLuzA2.setAlpha(1);
+        }
+        if(contadorLuz==550){
+            spriteLuzA3.setAlpha(1);
+        }
+        if(contadorLuz==600){
+            spriteLuzA4.setAlpha(1);
+        }
+        if(contadorLuz==650){
+            spriteLuzA5.setAlpha(1);
+        }
+        if(contadorLuz==700){
+            spriteLuzA6.setAlpha(1);
+        }
+        if(contadorLuz==750){
+            spriteLuzA7.setAlpha(1);
+        }
+        if(contadorLuz==800){
+            spriteLuzA8.setAlpha(1);
+            monumento++;
+        }
+
+        //monumentos
+
+        if(contadorLuz==900){
+            monumento++;
+            contadorLuz=0;
+            spriteLuzF1.setAlpha(0);
+            spriteLuzF2.setAlpha(0);
+            spriteLuzF3.setAlpha(0);
+            spriteLuzF4.setAlpha(0);
+            spriteLuzF5.setAlpha(0);
+            spriteLuzF6.setAlpha(0);
+            spriteLuzF7.setAlpha(0);
+            spriteLuzF8.setAlpha(0);
+            spriteLuzA1.setAlpha(0);
+            spriteLuzA2.setAlpha(0);
+            spriteLuzA3.setAlpha(0);
+            spriteLuzA4.setAlpha(0);
+            spriteLuzA5.setAlpha(0);
+            spriteLuzA6.setAlpha(0);
+            spriteLuzA7.setAlpha(0);
+            spriteLuzA8.setAlpha(0);
+        }
+        if(monumento==1){
+            spriteAngelOn.setAlpha(1);
+            spriteAngelOff.setAlpha(0);
+        }
+        if(monumento==2){
+            spriteAngelOn.setAlpha(0);
+            spriteBigBenOff.setAlpha(1);
+        }
+        if(monumento==3){
+            spriteBigBenOff.setAlpha(0);
+            spriteBigBenOn.setAlpha(1);
+        }
+        if(monumento==4){
+            spriteBigBenOn.setAlpha(0);
+            spriteEiffelOff.setAlpha(1);
+        }
+        if(monumento==5){
+            spriteEiffelOff.setAlpha(0);
+            spriteEiffelOn.setAlpha(1);
+        }
+        if(monumento==6){
+            spriteEiffelOn.setAlpha(0);
+            spriteLibertadOff.setAlpha(1);
+        }
+        if(monumento==7){
+            spriteLibertadOff.setAlpha(0);
+            spriteLibertadOn.setAlpha(1);
+        }
+        if(monumento==8){
+            spriteLibertadOn.setAlpha(0);
+            spriteRendentorOff.setAlpha(1);
+        }
+        if(monumento==9){
+            spriteRendentorOff.setAlpha(0);
+            spriteRendentorOn.setAlpha(1);
+        }
+        if(monumento==10){
+            monumento=0;
+        }
+
+
 
         //si la vida de foquin es 0 pierdes
         if (vidaFoquin == 0 && spriteFoquinRojo.getAlpha()==1) {
@@ -818,9 +1063,9 @@ public class EscenaJuego extends EscenaBase {
             spriteFoquinVerde.setAlpha(0);
             spriteFoquinAzul.setAlpha(0);
             spriteFoquin.setPosition(-300, -300);
-            spriteFoquinRojo.setPosition(-300,-300);
-            spriteFoquinVerde.setPosition(-300,-300);
-            spriteFoquinAzul.setPosition(-300,-300);
+            spriteFoquinRojo.setPosition(-300, -300);
+            spriteFoquinVerde.setPosition(-300, -300);
+            spriteFoquinAzul.setPosition(-300, -300);
         }
         if (vidaFoquin == 0 && spriteFoquinVerde.getAlpha()==1) {
             spriteFoquinCaeVerde.setAlpha(1);
@@ -831,9 +1076,9 @@ public class EscenaJuego extends EscenaBase {
             spriteFoquinVerde.setAlpha(0);
             spriteFoquinAzul.setAlpha(0);
             spriteFoquin.setPosition(-300, -300);
-            spriteFoquinRojo.setPosition(-300,-300);
-            spriteFoquinVerde.setPosition(-300,-300);
-            spriteFoquinAzul.setPosition(-300,-300);
+            spriteFoquinRojo.setPosition(-300, -300);
+            spriteFoquinVerde.setPosition(-300, -300);
+            spriteFoquinAzul.setPosition(-300, -300);
         }
         if (vidaFoquin == 0 && spriteFoquinAzul.getAlpha()==1) {
             spriteFoquinCaeAzul.setAlpha(1);
@@ -844,25 +1089,25 @@ public class EscenaJuego extends EscenaBase {
             spriteFoquinVerde.setAlpha(0);
             spriteFoquinAzul.setAlpha(0);
             spriteFoquin.setPosition(-300, -300);
-            spriteFoquinRojo.setPosition(-300,-300);
-            spriteFoquinVerde.setPosition(-300,-300);
-            spriteFoquinAzul.setPosition(-300,-300);
+            spriteFoquinRojo.setPosition(-300, -300);
+            spriteFoquinVerde.setPosition(-300, -300);
+            spriteFoquinAzul.setPosition(-300, -300);
         }
         //animacion de Foquin cayendo
-        if(perdiste==true &&spriteFoquinCaeRojo.getAlpha()==1){
-            spriteFoquinCaeRojo.setPosition(spriteFoquinCaeRojo.getX(), spriteFoquinCaeRojo.getY() -8);
-            spriteFoquinCaeVerde.setPosition(spriteFoquinCaeVerde.getX(), spriteFoquinCaeVerde.getY() -8);
-            spriteFoquinCaeAzul.setPosition(spriteFoquinCaeAzul.getX(), spriteFoquinCaeAzul.getY() -8);
+        if(perdiste == true && spriteFoquinCaeRojo.getAlpha() == 1) {
+            spriteFoquinCaeRojo.setPosition(spriteFoquinCaeRojo.getX(), spriteFoquinCaeRojo.getY() - 8);
+            spriteFoquinCaeVerde.setPosition(spriteFoquinCaeVerde.getX(), spriteFoquinCaeVerde.getY() - 8);
+            spriteFoquinCaeAzul.setPosition(spriteFoquinCaeAzul.getX(), spriteFoquinCaeAzul.getY() - 8);
         }
         if(perdiste==true &&spriteFoquinCaeVerde.getAlpha()==1){
-            spriteFoquinCaeRojo.setPosition(spriteFoquinCaeRojo.getX(), spriteFoquinCaeRojo.getY() -8);
-            spriteFoquinCaeVerde.setPosition(spriteFoquinCaeVerde.getX(), spriteFoquinCaeVerde.getY() -8);
-            spriteFoquinCaeAzul.setPosition(spriteFoquinCaeAzul.getX(), spriteFoquinCaeAzul.getY() -8);
+            spriteFoquinCaeRojo.setPosition(spriteFoquinCaeRojo.getX(), spriteFoquinCaeRojo.getY() - 8);
+            spriteFoquinCaeVerde.setPosition(spriteFoquinCaeVerde.getX(), spriteFoquinCaeVerde.getY() - 8);
+            spriteFoquinCaeAzul.setPosition(spriteFoquinCaeAzul.getX(), spriteFoquinCaeAzul.getY() - 8);
         }
         if(perdiste==true &&spriteFoquinCaeAzul.getAlpha()==1){
-            spriteFoquinCaeRojo.setPosition(spriteFoquinCaeRojo.getX(), spriteFoquinCaeRojo.getY() -8);
-            spriteFoquinCaeVerde.setPosition(spriteFoquinCaeVerde.getX(), spriteFoquinCaeVerde.getY() -8);
-            spriteFoquinCaeAzul.setPosition(spriteFoquinCaeAzul.getX(), spriteFoquinCaeAzul.getY() -8);
+            spriteFoquinCaeRojo.setPosition(spriteFoquinCaeRojo.getX(), spriteFoquinCaeRojo.getY() - 8);
+            spriteFoquinCaeVerde.setPosition(spriteFoquinCaeVerde.getX(), spriteFoquinCaeVerde.getY() - 8);
+            spriteFoquinCaeAzul.setPosition(spriteFoquinCaeAzul.getX(), spriteFoquinCaeAzul.getY() - 8);
         }
 
         if (spriteFoquin.getY() < 50) {
@@ -939,13 +1184,70 @@ public class EscenaJuego extends EscenaBase {
         regionPlataformaVerde= null;
         regionPlataformaAzul.getTexture().unload();
         regionPlataformaAzul=null;
+        regionPlataformaRojaChica.getTexture().unload();
+        regionPlataformaRojaChica= null;
+        regionPlataformaVerdeChica.getTexture().unload();
+        regionPlataformaVerdeChica= null;
+        regionPlataformaAzulChica.getTexture().unload();
+        regionPlataformaAzulChica=null;
 
         regionBtnPausa.getTexture().unload();
         regionBtnPausa=null;
         regionPantallaPausa.getTexture().unload();
         regionPantallaPausa=null;
 
-
+        regionLuzA1.getTexture().unload();
+        regionLuzA1=null;
+        regionLuzA2.getTexture().unload();
+        regionLuzA2=null;
+        regionLuzA3.getTexture().unload();
+        regionLuzA3=null;
+        regionLuzA4.getTexture().unload();
+        regionLuzA4=null;
+        regionLuzA5.getTexture().unload();
+        regionLuzA5=null;
+        regionLuzA6.getTexture().unload();
+        regionLuzA6=null;
+        regionLuzA7.getTexture().unload();
+        regionLuzA7=null;
+        regionLuzA8.getTexture().unload();
+        regionLuzA8=null;
+        regionLuzF1.getTexture().unload();
+        regionLuzF1=null;
+        regionLuzF2.getTexture().unload();
+        regionLuzF2=null;
+        regionLuzF3.getTexture().unload();
+        regionLuzF3=null;
+        regionLuzF4.getTexture().unload();
+        regionLuzF4=null;
+        regionLuzF5.getTexture().unload();
+        regionLuzF5=null;
+        regionLuzF6.getTexture().unload();
+        regionLuzF6=null;
+        regionLuzF7.getTexture().unload();
+        regionLuzF7=null;
+        regionLuzF8.getTexture().unload();
+        regionLuzF8=null;
+        regionAngelOff.getTexture().unload();
+        regionAngelOff=null;
+        regionAngelOn.getTexture().unload();
+        regionAngelOn=null;
+        regionBigBenOff.getTexture().unload();
+        regionBigBenOff=null;
+        regionBigBenOn.getTexture().unload();
+        regionBigBenOn=null;
+        regionEiffelOff.getTexture().unload();
+        regionEiffelOff=null;
+        regionEiffelOn.getTexture().unload();
+        regionEiffelOn=null;
+        regionLibertadOff.getTexture().unload();
+        regionLibertadOff=null;
+        regionLibertadOn.getTexture().unload();
+        regionLibertadOn=null;
+        regionRendentorOff.getTexture().unload();
+        regionRendentorOff=null;
+        regionRendentorOn.getTexture().unload();
+        regionRendentorOn=null;
 
     }
 }

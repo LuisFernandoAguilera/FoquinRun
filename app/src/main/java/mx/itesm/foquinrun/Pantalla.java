@@ -84,7 +84,7 @@ public class Pantalla extends EscenaBase {
 
         regionPersonajes= cargarImagen("Pantalla/Personajes.png");
 
-        regionFoquin= cargarImagenMosaico("EscenaJuego/foquin.png", 1000, 280, 1, 5);
+        regionFoquin= cargarImagenMosaico("EscenaJuego/Foquin.png", 1000, 280, 1, 5);
     }
 
 
@@ -181,7 +181,7 @@ public class Pantalla extends EscenaBase {
                         break;
                     case OPCION_FLECHAI:
 
-                        
+
                         break;
 
 

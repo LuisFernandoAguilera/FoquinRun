@@ -68,7 +68,7 @@ public class EscenaMenu extends EscenaBase
 
         regionMundo= cargarImagen("Pantalla/mundo gira sin transparencia.png");
 
-        regionFoquin= cargarImagenMosaico("EscenaJuego/foquin.png", 1000, 280, 1, 5);
+        regionFoquin= cargarImagenMosaico("EscenaJuego/Foquin.png", 1000, 280, 1, 5);
         regionFoquinRojo= cargarImagenMosaico("EscenaJuego/FoquinRojo.png", 1000, 280, 1, 5);
         regionFoquinVerde= cargarImagenMosaico("EscenaJuego/FoquinVerde.png", 1000, 280, 1, 5);
         regionFoquinAzul= cargarImagenMosaico("EscenaJuego/FoquinAzul.png", 1000, 280, 1, 5);
