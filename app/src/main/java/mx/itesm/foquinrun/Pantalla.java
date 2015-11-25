@@ -239,6 +239,7 @@ public class Pantalla extends EscenaBase {
     @Override
     protected void onManagedUpdate(float pSecondsElapsed) {
         super.onManagedUpdate(pSecondsElapsed);
+        agregarMarcadorAlto();
         if(imagen==1){
             spriteFoquin.setAlpha(1);
             spriteFoquinB.setAlpha(0);
@@ -257,6 +258,7 @@ public class Pantalla extends EscenaBase {
     @Override
     public void onBackKeyPressed() {
         // Regresar al menú principal
+        agregarMarcadorAlto();
         admEscenas.crearEscenaMenu();
         admEscenas.setEscena(TipoEscena.ESCENA_MENU);
         admEscenas.liberarEscenaPantalla();

@@ -176,9 +176,6 @@ public class EscenaJuego extends EscenaBase {
     private IFont fontMonster;
     private int puntos = 0;
 
-    private int puntosAlto=0;
-    private Text txtPuntosAlto;
-
     private Text txtMarcador;
 
     private int monumento=0;
@@ -266,7 +263,6 @@ public class EscenaJuego extends EscenaBase {
         regionBtnMenu= cargarImagen("EscenaJuego/Perdiste/Menu_neon.png");
         regionBtnVolveraJugar= cargarImagen("EscenaJuego/Perdiste/Volver_A_Jugar_neon.png");
 
-
         fontMonster = cargarFont("fonts/monster.ttf", 64, 0xFFFFFF00, "0123456789");
 
         regionBtnPausa=cargarImagen("Pantalla/pausa.png");
@@ -284,7 +280,9 @@ public class EscenaJuego extends EscenaBase {
 
     @Override
     public void crearEscena() {
+        agregarTextoPuntos();
         agregarMarcadorAlto();
+
         agregarPausa();
         agregarPerdiste();
         actividadJuego.reproducirMusica("Audio/Digital Native.mp3", true);
@@ -566,8 +564,27 @@ public class EscenaJuego extends EscenaBase {
             attachChild(spriteFoquinAzul);
             spriteFoquinAzul.setPosition(250, 350);
             spriteFoquinAzul.setAlpha(0);
+    }
 
-        agregarTextoPuntos();
+    private void agregarMarcadorAlto() {
+        // Obtener de las preferencias el marcador mayor
+        SharedPreferences preferencias = actividadJuego.getSharedPreferences("marcadorAlto", Context.MODE_PRIVATE);
+        int puntos = preferencias.getInt("puntos",0);
+
+        txtMarcador = new Text(ControlJuego.ANCHO_CAMARA/2,ControlJuego.ALTO_CAMARA/2,
+                fontMonster,""+puntos,actividadJuego.getVertexBufferObjectManager());
+        attachChild(txtMarcador);
+        txtMarcador.setAlpha(0);
+        txtMarcador.setPosition(400,275);
+
+    }
+
+    private void agregarTextoPuntos() {
+        txtPuntos = new Text(ControlJuego.ANCHO_CAMARA-200,ControlJuego.ALTO_CAMARA-30,
+                fontMonster,"0          ",actividadJuego.getVertexBufferObjectManager());
+        attachChild(txtPuntos);
+        txtPuntos.setAlpha(0);
+        txtPuntos.setPosition(780,275);
     }
 
     private void agregarPerdiste() {
@@ -608,23 +625,11 @@ public class EscenaJuego extends EscenaBase {
                 return super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
             }
         };
+
+
         btnMenu.setPosition(645,95);
-        btnVolverJugar.setPosition(645,170);
+        btnVolverJugar.setPosition(645, 170);
 
-        SharedPreferences preferencias = actividadJuego.getSharedPreferences("marcadorAlto", Context.MODE_PRIVATE);
-        int puntos = preferencias.getInt("puntos", 0);
-
-        txtMarcador = new Text(ControlJuego.ANCHO_CAMARA/2,ControlJuego.ALTO_CAMARA-80,
-                fontMonster,""+puntos,actividadJuego.getVertexBufferObjectManager());
-
-        txtPuntos=new Text(ControlJuego.ANCHO_CAMARA/2,ControlJuego.ALTO_CAMARA/2,
-                fontMonster,"0          ",actividadJuego.getVertexBufferObjectManager());
-        escenaPerdiste.attachChild(txtPuntos);
-        txtPuntos.setAlpha(0);
-        txtPuntos.setPosition(850, 275);
-
-        escenaPerdiste.attachChild(txtMarcador);
-        txtMarcador.setPosition(390, 275);
         escenaPerdiste.attachChild(btnVolverJugar);
         escenaPerdiste.registerTouchArea(btnVolverJugar);
         escenaPerdiste.setBackgroundEnabled(false);
@@ -640,9 +645,7 @@ public class EscenaJuego extends EscenaBase {
 
     }
 
-    private void agregarMarcadorAlto() {
 
-    }
 
     private void agregarPausa() {
         // Crea el botón de PAUSA y lo agrega a la escena
@@ -715,15 +718,6 @@ public class EscenaJuego extends EscenaBase {
         }
     }
 
-    private void agregarTextoPuntos() {
-
-        txtPuntosAlto=new Text(ControlJuego.ANCHO_CAMARA/2,ControlJuego.ALTO_CAMARA/2,
-                fontMonster,"0          ",actividadJuego.getVertexBufferObjectManager());
-        attachChild(txtPuntosAlto);
-        txtPuntosAlto.setAlpha(0);
-        txtPuntosAlto.setPosition(320,270);
-
-    }
 
 
     private void agregarMenu() {
@@ -781,8 +775,13 @@ public class EscenaJuego extends EscenaBase {
     @Override
     protected void onManagedUpdate(float pSecondsElapsed) {
         super.onManagedUpdate(pSecondsElapsed);
+        if(perdiste==true){
+            txtPuntos.setAlpha(1);
+            txtMarcador.setAlpha(1);
+        }
+        actualizarPuntos();
         agregarPerdiste();
-        actulizarPuntos();
+        guardarMarcadorAlto();
         contadorTiempo=contadorTiempo+1;
         if(juegoCorriendo==true){
             cuentaRegresiva--;
@@ -1015,9 +1014,7 @@ public class EscenaJuego extends EscenaBase {
         if (contadorTiempo>350 && perdiste==false &&juegoCorriendo==true){
             puntos=puntos+1;
         }
-        if(perdiste==true){
-            txtPuntos.setAlpha(1);
-        }
+
         if (contadorcolision == 0 && foquinCae3 == false && juegoCorriendo==true) {
             spriteFoquin.setPosition(spriteFoquin.getX(), spriteFoquin.getY() - 12);
             spriteFoquinRojo.setPosition(spriteFoquinRojo.getX(), spriteFoquinRojo.getY() - 12);
@@ -1227,18 +1224,15 @@ public class EscenaJuego extends EscenaBase {
         }
     }
 
-    private void actulizarPuntos() {
-        if(juegoCorriendo==true) {
-            txtPuntos.setText("" + puntos);
-            txtPuntosAlto.setText("" + puntosAlto);
-        }
-    }
 
+
+    private void actualizarPuntos() {
+        txtPuntos.setText("" + puntos);
+    }
 
     @Override
     public void onBackKeyPressed() {
         guardarMarcadorAlto();
-
         admEscenas.crearEscenaMenu();
         admEscenas.setEscena(TipoEscena.ESCENA_MENU);
         admEscenas.liberarEscenaJuego();
@@ -1246,7 +1240,7 @@ public class EscenaJuego extends EscenaBase {
     private void guardarMarcadorAlto() {
         // Abre preferencias y ve si el marcador actual es mayor que el guardado
         SharedPreferences preferencias = actividadJuego.getSharedPreferences("marcadorAlto", Context.MODE_PRIVATE);
-        int anterior = preferencias.getInt("puntosAlto",0);
+        int anterior = preferencias.getInt("puntos",0);
         if (puntos>anterior) {
             // Nuevo valor mayor, guardarlo
             SharedPreferences.Editor editor = preferencias.edit();
@@ -1254,6 +1248,7 @@ public class EscenaJuego extends EscenaBase {
             editor.commit();
         }
     }
+
 
 
     @Override

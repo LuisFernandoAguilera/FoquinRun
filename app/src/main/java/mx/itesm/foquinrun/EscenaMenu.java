@@ -39,6 +39,12 @@ public class EscenaMenu extends EscenaBase
     private ITextureRegion regionMundo;
     private Sprite spriteMundo;
 
+    private ITextureRegion regionEspera;
+    private Sprite spriteEspera;
+
+    private ITextureRegion regionBlanco;
+    private Sprite spriteBlanco;
+
     private AnimatedSprite spriteFoquin;
     private TiledTextureRegion regionFoquin;
     private AnimatedSprite spriteFoquinRojo;
@@ -60,6 +66,7 @@ public class EscenaMenu extends EscenaBase
 
     private int angulo=0;
     private int contador=0;
+    private int tiempo=0;
 
 
 
@@ -76,10 +83,14 @@ public class EscenaMenu extends EscenaBase
 
         regionMundo= cargarImagen("Pantalla/mundo gira sin transparencia.png");
 
+
         regionFoquin= cargarImagenMosaico("EscenaJuego/Foquin.png", 1000, 280, 1, 5);
         regionFoquinRojo= cargarImagenMosaico("EscenaJuego/FoquinRojo.png", 1000, 280, 1, 5);
         regionFoquinVerde= cargarImagenMosaico("EscenaJuego/FoquinVerde.png", 1000, 280, 1, 5);
         regionFoquinAzul= cargarImagenMosaico("EscenaJuego/FoquinAzul.png", 1000, 280, 1, 5);
+
+        regionEspera=cargarImagen("Menu/espera.png");
+        regionBlanco=cargarImagen("Menu/blanco.png");
 
     }
 
@@ -96,6 +107,8 @@ public class EscenaMenu extends EscenaBase
 
         spriteMundo=cargarSprite(ControlJuego.ALTO_CAMARA/2-250, ControlJuego.ALTO_CAMARA/2-300, regionMundo);
         attachChild(spriteMundo);
+
+
 
         spriteFoquin = new AnimatedSprite(ControlJuego.ALTO_CAMARA / 2,
                 ControlJuego.ALTO_CAMARA / 2, regionFoquin,
@@ -129,6 +142,12 @@ public class EscenaMenu extends EscenaBase
         spriteFoquinAzul.setAlpha(0);
 
         agregarMenu();
+        spriteBlanco=cargarSprite(ControlJuego.ANCHO_CAMARA/2, ControlJuego.ALTO_CAMARA/2, regionBlanco);
+        attachChild(spriteBlanco);
+        spriteBlanco.setAlpha(0);
+        spriteEspera=cargarSprite(ControlJuego.ANCHO_CAMARA/2, ControlJuego.ALTO_CAMARA/2, regionEspera);
+        attachChild(spriteEspera);
+        spriteEspera.setAlpha(0);
     }
 
 
@@ -168,23 +187,34 @@ public class EscenaMenu extends EscenaBase
 
                 switch(pMenuItem.getID()) {
                     case OPCION_ACERCA_DE:
+                        spriteBlanco.setAlpha(1);
+                        spriteEspera.setAlpha(1);
 
-                        admEscenas.crearEscenaAcercaDe();
-                        admEscenas.setEscena(TipoEscena.ESCENA_ACERCA_DE);
-                        admEscenas.liberarEscenaMenu();
+                            admEscenas.crearEscenaAcercaDe();
+                            admEscenas.setEscena(TipoEscena.ESCENA_ACERCA_DE);
+                            admEscenas.liberarEscenaMenu();
+
                         break;
 
                     case OPCION_JUGAR:
+                        spriteBlanco.setAlpha(1);
+                        spriteEspera.setAlpha(1);
 
-                        admEscenas.crearEscenaJuego();
-                        admEscenas.setEscena(TipoEscena.ESCENA_JUEGO);
-                        admEscenas.liberarEscenaMenu();
+                            admEscenas.crearEscenaJuego();
+                            admEscenas.setEscena(TipoEscena.ESCENA_JUEGO);
+                            admEscenas.liberarEscenaMenu();
+
                         break;
 
                     case OPCION_BOTON:
-                        admEscenas.crearEscenaPantalla();
-                        admEscenas.setEscena(TipoEscena.ESCENA_PANTALLA);
-                        admEscenas.liberarEscenaMenu();
+                        spriteBlanco.setAlpha(1);
+                        spriteEspera.setAlpha(1);
+
+                            admEscenas.crearEscenaPantalla();
+                            admEscenas.setEscena(TipoEscena.ESCENA_PANTALLA);
+                            admEscenas.liberarEscenaMenu();
+
+
                         break;
 
                 }
@@ -200,8 +230,11 @@ public class EscenaMenu extends EscenaBase
     @Override
     protected void onManagedUpdate(float pSecondsElapsed) {
         super.onManagedUpdate(pSecondsElapsed);
-
+        if(spriteEspera.getAlpha()==1){
+            tiempo++;
+        }
         spriteMundo.setRotation(angulo);
+        spriteEspera.setRotation(angulo);
         angulo--;
         if(angulo==-360){
             angulo=0;
