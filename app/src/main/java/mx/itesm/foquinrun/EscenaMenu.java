@@ -187,8 +187,6 @@ public class EscenaMenu extends EscenaBase
 
                 switch(pMenuItem.getID()) {
                     case OPCION_ACERCA_DE:
-                        spriteBlanco.setAlpha(1);
-                        spriteEspera.setAlpha(1);
 
                             admEscenas.crearEscenaAcercaDe();
                             admEscenas.setEscena(TipoEscena.ESCENA_ACERCA_DE);
@@ -197,18 +195,15 @@ public class EscenaMenu extends EscenaBase
                         break;
 
                     case OPCION_JUGAR:
-                        spriteBlanco.setAlpha(1);
-                        spriteEspera.setAlpha(1);
 
-                            admEscenas.crearEscenaJuego();
-                            admEscenas.setEscena(TipoEscena.ESCENA_JUEGO);
+
+                            admEscenas.crearEscenaEspera();
+                            admEscenas.setEscena(TipoEscena.ESCENA_ESPERA);
                             admEscenas.liberarEscenaMenu();
 
                         break;
 
                     case OPCION_BOTON:
-                        spriteBlanco.setAlpha(1);
-                        spriteEspera.setAlpha(1);
 
                             admEscenas.crearEscenaPantalla();
                             admEscenas.setEscena(TipoEscena.ESCENA_PANTALLA);

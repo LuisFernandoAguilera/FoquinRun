@@ -24,6 +24,7 @@ public class AdministradorEscenas
     private EscenaBase escenaJuego;
     private EscenaBase escenaAnimacionHistoria;
     private EscenaBase escenaCreditos;
+    private EscenaBase escenaEspera;
 
     // El tipo de escena que se está mostrando
     private TipoEscena tipoEscenaActual = TipoEscena.ESCENA_SPLASH;
@@ -91,6 +92,8 @@ public class AdministradorEscenas
             case ESCENA_CREDITOS:
                 setEscenaBase(escenaCreditos);
                 break;
+            case ESCENA_ESPERA:
+            setEscenaBase(escenaEspera);
 
         }
     }
@@ -167,6 +170,14 @@ public class AdministradorEscenas
     public void liberarEscenaCreditos(){
         escenaCreditos.liberarEscena();
         escenaCreditos=null;
+    }
+
+    public void crearEscenaEspera(){
+        escenaEspera = new Espera();
+    }
+    public void liberarEscenaEspera(){
+        escenaEspera.liberarEscena();
+        escenaEspera=null;
     }
 /*
     //*** Crea la escena de JUEGO
