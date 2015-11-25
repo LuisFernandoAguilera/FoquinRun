@@ -287,25 +287,25 @@ public class EscenaJuego extends EscenaBase {
         agregarMarcadorAlto();
         agregarPausa();
         agregarPerdiste();
-        actividadJuego.reproducirMusica("Audio/Digital Native.mp3",true);
+        actividadJuego.reproducirMusica("Audio/Digital Native.mp3", true);
 
-        spriteLuzF1=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF1);
-        spriteLuzF2=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF2);
-        spriteLuzF3=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF3);
-        spriteLuzF4=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF4);
-        spriteLuzF5=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF5);
-        spriteLuzF6=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF6);
-        spriteLuzF7=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF7);
-        spriteLuzF8=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF8);
+        spriteLuzF1=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/2-180, regionLuzF1);
+        spriteLuzF2=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2-180, regionLuzF2);
+        spriteLuzF3=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2-180, regionLuzF3);
+        spriteLuzF4=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2-180, regionLuzF4);
+        spriteLuzF5=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2-180, regionLuzF5);
+        spriteLuzF6=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2-180, regionLuzF6);
+        spriteLuzF7=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2-180, regionLuzF7);
+        spriteLuzF8=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2-180, regionLuzF8);
 
-        spriteLuzA1=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2+150, regionLuzA1);
-        spriteLuzA2=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2+150, regionLuzA2);
-        spriteLuzA3=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2+150, regionLuzA3);
-        spriteLuzA4=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2+150, regionLuzA4);
-        spriteLuzA5=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2+150, regionLuzA5);
-        spriteLuzA6=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2+150, regionLuzA6);
-        spriteLuzA7=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2+150, regionLuzA7);
-        spriteLuzA8=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2+150, regionLuzA8);
+        spriteLuzA1=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2-30, regionLuzA1);
+        spriteLuzA2=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2-30, regionLuzA2);
+        spriteLuzA3=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2-30, regionLuzA3);
+        spriteLuzA4=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2-30, regionLuzA4);
+        spriteLuzA5=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2-30, regionLuzA5);
+        spriteLuzA6=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2-30, regionLuzA6);
+        spriteLuzA7=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2-30, regionLuzA7);
+        spriteLuzA8=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA/ 2-30, regionLuzA8);
 
         spriteAngelOff=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionAngelOff);
         spriteAngelOn=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionAngelOn);
@@ -524,7 +524,7 @@ public class EscenaJuego extends EscenaBase {
 
             registerTouchArea(btnSaltar);
             attachChild(btnSaltar);
-            btnSaltar.setPosition(130,130);
+            btnSaltar.setPosition(130, 130);
             btnSaltar.setScale(2);
 
 
@@ -537,6 +537,8 @@ public class EscenaJuego extends EscenaBase {
             spriteFoquin.animate(100);
             attachChild(spriteFoquin);
             spriteFoquin.setPosition(250, 350);
+            spriteFoquin.setAlpha(1);
+
 
 
             spriteFoquinRojo = new AnimatedSprite(ControlJuego.ALTO_CAMARA / 2,
@@ -982,6 +984,19 @@ public class EscenaJuego extends EscenaBase {
                             spriteFoquinAzul.getAlpha() == 1 && plataforma.getColor() == 2&& foquinColor==0) {
                         vidaFoquin = 0;
                     }
+                    if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma()) &&
+                            spriteFoquin.getAlpha() == 1 && plataforma.getColor() == 1&& foquinColor==0) {
+                        vidaFoquin=0;
+                    }
+                    if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma()) &&
+                            spriteFoquin.getAlpha() == 1 && plataforma.getColor() == 2&& foquinColor==0) {
+                        vidaFoquin=0;
+                    }
+                    if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma()) &&
+                            spriteFoquin.getAlpha() == 1 && plataforma.getColor() == 3&& foquinColor==0) {
+                        vidaFoquin=0;
+                    }
+
                     if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma())) {
                         plataforma.getSpritePlataforma().setColor(1f, 1f, 1f);
                     }
@@ -996,7 +1011,6 @@ public class EscenaJuego extends EscenaBase {
                     }
                 }
             }
-
 
         if (contadorTiempo>350 && perdiste==false &&juegoCorriendo==true){
             puntos=puntos+1;
@@ -1126,6 +1140,19 @@ public class EscenaJuego extends EscenaBase {
 
 
         //si la vida de foquin es 0 pierdes
+        if (vidaFoquin == 0 && spriteFoquin.getAlpha()==1) {
+
+            perdiste=true;
+
+            spriteFoquin.setAlpha(0);
+            spriteFoquinRojo.setAlpha(0);
+            spriteFoquinVerde.setAlpha(0);
+            spriteFoquinAzul.setAlpha(0);
+            spriteFoquin.setPosition(-300, -300);
+            spriteFoquinRojo.setPosition(-300, -300);
+            spriteFoquinVerde.setPosition(-300, -300);
+            spriteFoquinAzul.setPosition(-300, -300);
+        }
         if (vidaFoquin == 0 && spriteFoquinRojo.getAlpha()==1) {
 
             spriteFoquinCaeRojo.setAlpha(1);
