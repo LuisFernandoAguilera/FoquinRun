@@ -1,5 +1,8 @@
 package mx.itesm.foquinrun;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.background.Background;
@@ -11,6 +14,8 @@ import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.entity.text.Text;
+import org.andengine.opengl.font.IFont;
 import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
@@ -56,6 +61,9 @@ public class EscenaMenu extends EscenaBase
     private int angulo=0;
     private int contador=0;
 
+
+
+
     @Override
     public void cargarRecursos() {
 
@@ -77,6 +85,9 @@ public class EscenaMenu extends EscenaBase
 
     @Override
     public void crearEscena() {
+        actividadJuego.reproducirMusica("Audio/Digital Native.mp3",true);
+
+
         spriteFondo = cargarSprite(ControlJuego.ANCHO_CAMARA/2, ControlJuego.ALTO_CAMARA/2, regionFondo);
 
         SpriteBackground fondo = new SpriteBackground(1,1,1,spriteFondo);
@@ -119,6 +130,7 @@ public class EscenaMenu extends EscenaBase
 
         agregarMenu();
     }
+
 
 
     private void agregarMenu() {

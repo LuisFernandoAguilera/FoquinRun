@@ -1,8 +1,13 @@
 package mx.itesm.foquinrun;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.Menu;
 import android.widget.Switch;
 
+import org.andengine.audio.music.Music;
+import org.andengine.audio.music.MusicFactory;
+import org.andengine.audio.sound.Sound;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.JumpModifier;
 import org.andengine.entity.modifier.ParallelEntityModifier;
@@ -38,7 +43,6 @@ public class EscenaJuego extends EscenaBase {
     private Sprite spriteLibertadOff;
     private ITextureRegion regionRendentorOff;
     private Sprite spriteRendentorOff;
-
     private ITextureRegion regionAngelOn;
     private Sprite spriteAngelOn;
     private ITextureRegion regionBigBenOn;
@@ -97,7 +101,6 @@ public class EscenaJuego extends EscenaBase {
     private Sprite sprite2a;
     private Sprite sprite1a;
 
-
     private ITextureRegion regionFondo;
     private Sprite spriteFondo;
     private ITextureRegion regionFondoMedio;
@@ -110,39 +113,32 @@ public class EscenaJuego extends EscenaBase {
     private TiledTextureRegion regionBtnAzul;
     private TiledTextureRegion regionBtnSaltar;
 
-    private ITextureRegion regionPantallaPerdiste;
-    private Sprite spritePantallaPerdiste;
-
     private AnimatedSprite spriteFoquin;
     private TiledTextureRegion regionFoquin;
-
     private AnimatedSprite spriteFoquinRojo;
     private TiledTextureRegion regionFoquinRojo;
-
     private AnimatedSprite spriteFoquinVerde;
     private TiledTextureRegion regionFoquinVerde;
-
     private AnimatedSprite spriteFoquinAzul;
     private TiledTextureRegion regionFoquinAzul;
 
     private ITextureRegion regionFoquinCaeRojo;
     private Sprite spriteFoquinCaeRojo;
-
     private ITextureRegion regionFoquinCaeVerde;
     private Sprite spriteFoquinCaeVerde;
-
     private ITextureRegion regionFoquinCaeAzul;
     private Sprite spriteFoquinCaeAzul;
-
-
 
     private ITextureRegion regionPlataformaEntrada;
     private Sprite spritePlataformaEntrada;
 
+    private ITextureRegion regionFondoPausa;
+    private Sprite spriteFonodPausa;
+    private ITextureRegion regionMenuPausa;
+    private Sprite spriteMenuPausa;
+    private ITextureRegion regionReanudarPausa;
+    private Sprite spriteReanudarPausa;
 
-
-    private ITextureRegion regionBtnPausa;
-    private final int OPCION_BTN_PAUSA=0;
     private ITextureRegion regionBtnMenu;
     private final int OPCION_BTN_MENU=1;
     private ITextureRegion regionBtnVolveraJugar;
@@ -150,54 +146,60 @@ public class EscenaJuego extends EscenaBase {
 
 
     private MenuScene menu;
-    private ITextureRegion regionPantallaPausa;
-    private Sprite spritePantalllaPausa;
 
     private ArrayList <Plataforma> listaPlataformas;
-
 
     private ITextureRegion regionPlataformaRoja;
     private ITextureRegion regionPlataformaVerde;
     private ITextureRegion regionPlataformaAzul;
-    private ITextureRegion regionPlataformaRojaChica;
-    private ITextureRegion regionPlataformaVerdeChica;
-    private ITextureRegion regionPlataformaAzulChica;
-    private float tiempoplataformas = 0;
-    private float LIMITE_TIEMPO = 1.6f;
 
-    private boolean foquinSalta=false;
+    private float tiempoplataformas = 0;
+    private float LIMITE_TIEMPO = 1.8f;
 
     private boolean foquinCae2=true;
     private boolean foquinCae3=true;
     private int contadorcolision=0;
     private int vidaFoquin=1;
-    private boolean pausa=false;
     private boolean perdiste=false;
-    private boolean quitarBoton=false;
 
     private int foquinColor=0;
 
     private int contadorTiempo=0;
     private int contadorLuz=0;
-    private int cuentaRegresiva=200;
-
-    private int sumaplataforma=0;
-
-    private CameraScene escenaPausa;
-    private ITextureRegion regionPausa;
-    private ITextureRegion getRegionBtnPausa;
+    private int cuentaRegresiva=280;
 
     private boolean juegoCorriendo=true;
+    private boolean juegoCorriendo2=true;
     private int altura=0;
 
     private Text txtPuntos;
     private IFont fontMonster;
     private int puntos = 0;
+
+    private int puntosAlto=0;
+    private Text txtPuntosAlto;
+
+    private Text txtMarcador;
+
     private int monumento=0;
-    private boolean monumentoluz=false;
+
+    private CameraScene escenaPerdiste;
+    private ITextureRegion regionPantallaPerdiste;
+
+    private CameraScene escenaPausa;
+    private ITextureRegion regionPausa;
+    private ITextureRegion regionBtnPausa;
+    private ITextureRegion regionBtnReanudar;
+    private ITextureRegion regionBtnMenuN;
+
+    private Sound sonidoSalto;
+    private Sound sonidoCaida;
+
+    private int cae=0;
 
     @Override
     public void cargarRecursos() {
+
         regionAngelOff=cargarImagen("EscenaJuego/Monumentos/angel off.png");
         regionBigBenOff=cargarImagen("EscenaJuego/Monumentos/big ben off.png");
         regionEiffelOff=cargarImagen("EscenaJuego/Monumentos/eiffel off.png");
@@ -241,7 +243,6 @@ public class EscenaJuego extends EscenaBase {
 
         regionPantallaPerdiste=cargarImagen("EscenaJuego/Perdiste/Perdida_neon.png");
 
-
         regionFoquin= cargarImagenMosaico("EscenaJuego/Foquin.png", 1000, 280, 1, 5);
         regionFoquinRojo= cargarImagenMosaico("EscenaJuego/FoquinRojo.png", 1000, 280, 1, 5);
         regionFoquinVerde=cargarImagenMosaico("EscenaJuego/FoquinVerde.png", 1000, 280, 1, 5);
@@ -256,27 +257,26 @@ public class EscenaJuego extends EscenaBase {
         regionBtnAzul= cargarImagenMosaico("EscenaJuego/Botones/botonAzul.png", 240, 120, 1, 2);
         regionBtnSaltar=cargarImagenMosaico("EscenaJuego/Botones/botonSaltar.png", 240, 120, 1, 2);
 
-
-
         regionPlataformaRoja= cargarImagen("EscenaJuego/Botones/Plataformas/plataformaRojaPrendida.png");
         regionPlataformaVerde= cargarImagen("EscenaJuego/Botones/Plataformas/plataformaVerdePrendida.png");
         regionPlataformaAzul= cargarImagen("EscenaJuego/Botones/Plataformas/plataformaAzulPrendida.png");
-        regionPlataformaRojaChica= cargarImagen("EscenaJuego/Botones/Plataformas/plataformarojachica.png");
-        regionPlataformaVerdeChica= cargarImagen("EscenaJuego/Botones/Plataformas/plataformaverdechica.png");
-        regionPlataformaAzulChica= cargarImagen("EscenaJuego/Botones/Plataformas/plataformaroazulchica.png");
 
         regionPlataformaEntrada=cargarImagen("EscenaJuego/Botones/Plataformas/plataformaEntrada.png");
 
-        regionBtnPausa= cargarImagen("EscenaJuego/Botones/BotonPausa.png");
         regionBtnMenu= cargarImagen("EscenaJuego/Perdiste/Menu_neon.png");
         regionBtnVolveraJugar= cargarImagen("EscenaJuego/Perdiste/Volver_A_Jugar_neon.png");
 
 
-        regionPantallaPausa= cargarImagen("EsenaPausa/fondo_pausa.png");
-
-        regionPausa= cargarImagen("EsenaPausa/fondo_pausa.png");
-
         fontMonster = cargarFont("fonts/monster.ttf", 64, 0xFFFFFF00, "0123456789");
+
+        regionBtnPausa=cargarImagen("Pantalla/pausa.png");
+        regionPausa=cargarImagen("EsenaPausa/Pausa_Pantalla.png");
+        regionBtnReanudar=cargarImagen("EsenaPausa/ReanudarF.png");
+        regionBtnMenuN=cargarImagen("EsenaPausa/MenuNeon.png");
+
+
+        sonidoSalto=cargarEfecto("Audio/jump.wav");
+        sonidoCaida=cargarEfecto("Audio/fall.mp3");
 
 
 
@@ -284,20 +284,10 @@ public class EscenaJuego extends EscenaBase {
 
     @Override
     public void crearEscena() {
-
-
-        Sprite btnPausa = new Sprite(regionBtnPausa.getWidth(), ControlJuego.ALTO_CAMARA - regionBtnPausa.getHeight(),
-                regionBtnPausa, actividadJuego.getVertexBufferObjectManager()) {
-            @Override
-            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
-                if (pSceneTouchEvent.isActionDown()) {
-                    pausarJuego();
-                }
-                return super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
-            }
-        };
-        attachChild(btnPausa);
-        registerTouchArea(btnPausa);
+        agregarMarcadorAlto();
+        agregarPausa();
+        agregarPerdiste();
+        actividadJuego.reproducirMusica("Audio/Digital Native.mp3",true);
 
         spriteLuzF1=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF1);
         spriteLuzF2=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionLuzF2);
@@ -332,10 +322,6 @@ public class EscenaJuego extends EscenaBase {
         spriteFondoMedio=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA -250, regionFondoMedio);
         spriteFondoFrente=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionFondoFrente);
 
-        spritePantallaPerdiste=cargarSprite(ControlJuego.ANCHO_CAMARA / 2-50, ControlJuego.ALTO_CAMARA / 2, regionPantallaPerdiste);
-        attachChild(spritePantallaPerdiste);
-        spritePantallaPerdiste.setAlpha(0);
-
         agregarMenu();
 
         AutoParallaxBackground fondoAnimado = new AutoParallaxBackground(1, 1, 1, 5);
@@ -352,14 +338,14 @@ public class EscenaJuego extends EscenaBase {
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3, spriteLuzA7));
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-3, spriteLuzA8));
 
-        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10, spriteAngelOff));
-        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10, spriteAngelOn));
-        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10, spriteBigBenOff));
-        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10, spriteBigBenOn));
-        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10, spriteEiffelOff));
-        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10, spriteEiffelOn));
-        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10, spriteRendentorOff));
-        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-10, spriteRendentorOn));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteAngelOff));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteAngelOn));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteBigBenOff));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteBigBenOn));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteEiffelOff));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteEiffelOn));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteRendentorOff));
+        fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteRendentorOn));
 
 
         fondoAnimado.attachParallaxEntity(new ParallaxBackground.ParallaxEntity(-5, spriteFondoFrente));
@@ -447,7 +433,7 @@ public class EscenaJuego extends EscenaBase {
             @Override
             public boolean onAreaTouched(TouchEvent event, float x, float y) {
                 if (spriteFoquin.getY()==350 +altura) {
-                    foquinSalta=true;
+                    sonidoSalto.play();
 
                     JumpModifier salto = new JumpModifier(1, spriteFoquin.getX(), spriteFoquin.getX(),
                             spriteFoquin.getY(), spriteFoquin.getY(), -250);
@@ -470,7 +456,6 @@ public class EscenaJuego extends EscenaBase {
                 @Override
                 public boolean onAreaTouched(TouchEvent event, float x, float y) {
                     if (spriteFoquin.getY()==350 +altura) {
-                        foquinSalta=true;
                         spriteFoquin.setAlpha(0);
                         spriteFoquinRojo.setAlpha(1);
                         spriteFoquinVerde.setAlpha(0);
@@ -580,55 +565,192 @@ public class EscenaJuego extends EscenaBase {
             spriteFoquinAzul.setPosition(250, 350);
             spriteFoquinAzul.setAlpha(0);
 
-
-        spritePantalllaPausa=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionPantallaPausa);
-        attachChild(spritePantalllaPausa);
-        spritePantalllaPausa.setAlpha(0);
         agregarTextoPuntos();
     }
 
-    private void agregarTextoPuntos() {
+    private void agregarPerdiste() {
+        if(perdiste==true){
+            ventanaPerdiste();
+        }
+
+            escenaPerdiste= new CameraScene(actividadJuego.camara);
+            Sprite fondoPerdiste=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2,
+                    regionPantallaPerdiste);
+            escenaPerdiste.attachChild(fondoPerdiste);
+
+            Sprite btnVolverJugar= new Sprite(ControlJuego.ANCHO_CAMARA/2, ControlJuego.ALTO_CAMARA/2,
+                    regionBtnVolveraJugar, actividadJuego.getVertexBufferObjectManager()) {
+                @Override
+                public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                    if (pSceneTouchEvent.isActionDown()) {
+
+                        admEscenas.liberarEscenaJuego();
+                        admEscenas.crearEscenaJuego();
+                        admEscenas.setEscena(TipoEscena.ESCENA_JUEGO);
+                        return true;
+                    }
+                    return super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+                }
+            };
+        Sprite btnMenu= new Sprite(ControlJuego.ANCHO_CAMARA/2, ControlJuego.ALTO_CAMARA/2,
+                regionBtnMenu, actividadJuego.getVertexBufferObjectManager()) {
+            @Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                if (pSceneTouchEvent.isActionDown()) {
+
+                    admEscenas.liberarEscenaJuego();
+                    admEscenas.crearEscenaMenu();
+                    admEscenas.setEscena(TipoEscena.ESCENA_MENU);
+                    return true;
+                }
+                return super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+            }
+        };
+        btnMenu.setPosition(645,95);
+        btnVolverJugar.setPosition(645,170);
+
+        SharedPreferences preferencias = actividadJuego.getSharedPreferences("marcadorAlto", Context.MODE_PRIVATE);
+        int puntos = preferencias.getInt("puntos", 0);
+
+        txtMarcador = new Text(ControlJuego.ANCHO_CAMARA/2,ControlJuego.ALTO_CAMARA-80,
+                fontMonster,""+puntos,actividadJuego.getVertexBufferObjectManager());
+
         txtPuntos=new Text(ControlJuego.ANCHO_CAMARA/2,ControlJuego.ALTO_CAMARA/2,
                 fontMonster,"0          ",actividadJuego.getVertexBufferObjectManager());
-        attachChild(txtPuntos);
+        escenaPerdiste.attachChild(txtPuntos);
         txtPuntos.setAlpha(0);
-        txtPuntos.setPosition(740,275);
+        txtPuntos.setPosition(850, 275);
+
+        escenaPerdiste.attachChild(txtMarcador);
+        txtMarcador.setPosition(390, 275);
+        escenaPerdiste.attachChild(btnVolverJugar);
+        escenaPerdiste.registerTouchArea(btnVolverJugar);
+        escenaPerdiste.setBackgroundEnabled(false);
+        escenaPerdiste.attachChild(btnMenu);
+        escenaPerdiste.registerTouchArea(btnMenu);
+
+
 
     }
 
+    private void ventanaPerdiste() {
+        setChildScene(escenaPerdiste, false, true, false);
+
+    }
+
+    private void agregarMarcadorAlto() {
+
+    }
+
+    private void agregarPausa() {
+        // Crea el botón de PAUSA y lo agrega a la escena
+        Sprite btnPausa = new Sprite(regionBtnPausa.getWidth()/2, ControlJuego.ALTO_CAMARA - regionBtnPausa.getHeight()/2,
+                regionBtnPausa, actividadJuego.getVertexBufferObjectManager()) {
+            @Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                if (pSceneTouchEvent.isActionDown()) {
+                    pausarJuego();
+                    return true;
+                }
+                return super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+            }
+        };
+
+        attachChild(btnPausa);
+        registerTouchArea(btnPausa);
+
+        // Crear la escena de PAUSA, pero NO lo agrega a la escena
+        escenaPausa = new CameraScene(actividadJuego.camara);
+        Sprite fondoPausa = cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2,
+                regionPausa);
+        escenaPausa.attachChild(fondoPausa);
+
+        // Crea el botón de PAUSA y lo agrega a la escena
+        Sprite btnContinuar = new Sprite(ControlJuego.ANCHO_CAMARA/2, ControlJuego.ALTO_CAMARA/2,
+                regionBtnReanudar, actividadJuego.getVertexBufferObjectManager()) {
+            @Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                if (pSceneTouchEvent.isActionDown()) {
+                    pausarJuego();
+                    return true;
+                }
+                return super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+            }
+        };
+        Sprite btnMenuN = new Sprite(ControlJuego.ANCHO_CAMARA/2, ControlJuego.ALTO_CAMARA/2,
+                regionBtnMenuN, actividadJuego.getVertexBufferObjectManager()) {
+            @Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                if (pSceneTouchEvent.isActionDown()) {
+                    admEscenas.liberarEscenaJuego();
+                    admEscenas.crearEscenaMenu();
+                    admEscenas.setEscena(TipoEscena.ESCENA_MENU);
+
+                    return true;
+                }
+                return super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+            }
+        };
+
+        btnContinuar.setPosition(800,200);
+        btnMenuN.setPosition(500,200);
+        escenaPausa.attachChild(btnMenuN);
+        escenaPausa.registerTouchArea(btnMenuN);
+        escenaPausa.attachChild(btnContinuar);
+        escenaPausa.registerTouchArea(btnContinuar);
+
+        escenaPausa.setBackgroundEnabled(false);
+    }
     private void pausarJuego() {
         if (juegoCorriendo) {
-            setChildScene(escenaPausa,false,true,false);
+            setChildScene(escenaPausa, false, true, false);
             juegoCorriendo = false;
+            juegoCorriendo2=false;
         } else {
             clearChildScene();
             juegoCorriendo = true;
+            juegoCorriendo2=true;
         }
     }
+
+    private void agregarTextoPuntos() {
+
+        txtPuntosAlto=new Text(ControlJuego.ANCHO_CAMARA/2,ControlJuego.ALTO_CAMARA/2,
+                fontMonster,"0          ",actividadJuego.getVertexBufferObjectManager());
+        attachChild(txtPuntosAlto);
+        txtPuntosAlto.setAlpha(0);
+        txtPuntosAlto.setPosition(320,270);
+
+    }
+
 
     private void agregarMenu() {
         menu = new MenuScene(actividadJuego.camara);
         menu.setPosition(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2);
 
-        IMenuItem opcionPausa = new ScaleMenuItemDecorator(new SpriteMenuItem(OPCION_BTN_PAUSA,
-                regionBtnPausa, actividadJuego.getVertexBufferObjectManager()), 1.5f, 1);
         IMenuItem opcionBtnMenu= new ScaleMenuItemDecorator(new SpriteMenuItem(OPCION_BTN_MENU,
                 regionBtnMenu, actividadJuego.getVertexBufferObjectManager()), 1.5f, 1);
         IMenuItem opcionBtnVolveraJugar= new ScaleMenuItemDecorator(new SpriteMenuItem(OPCION_BTN_VOLVEAJUGAR,
                 regionBtnVolveraJugar, actividadJuego.getVertexBufferObjectManager()), 1.5f, 1);
 
-        menu.addMenuItem(opcionPausa);
+
         menu.addMenuItem(opcionBtnMenu);
+        opcionBtnMenu.setAlpha(0);
+
         menu.addMenuItem(opcionBtnVolveraJugar);
+        opcionBtnVolveraJugar.setAlpha(0);
+
+
+
         menu.buildAnimations();
         menu.setBackgroundEnabled(false);
 
-        opcionPausa.setPosition(-600, 350);
 
         opcionBtnMenu.setPosition(-50, -300);
         opcionBtnVolveraJugar.setPosition(-50, -230);
-        opcionBtnMenu.setAlpha(0);
-        opcionBtnVolveraJugar.setAlpha(0);
+
+
+
         menu.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem,
@@ -636,30 +758,14 @@ public class EscenaJuego extends EscenaBase {
 
                 switch (pMenuItem.getID()) {
 
-
-                    case OPCION_BTN_PAUSA:
-                        spritePantalllaPausa.setAlpha(1);
-                        pausa=true;
-
-                        break;
                     case OPCION_BTN_MENU:
 
-                        admEscenas.crearEscenaMenu();
-                        admEscenas.setEscena(TipoEscena.ESCENA_MENU);
-                        admEscenas.liberarEscenaJuego();
 
                         break;
                     case OPCION_BTN_VOLVEAJUGAR:
-                        if(perdiste==true){
-                        admEscenas.liberarEscenaJuego();
-                        admEscenas.crearEscenaJuego();
-                        admEscenas.setEscena(TipoEscena.ESCENA_JUEGO);
-                            }
-                        else
 
 
                         break;
-
 
                 }
                 return true;
@@ -673,11 +779,13 @@ public class EscenaJuego extends EscenaBase {
     @Override
     protected void onManagedUpdate(float pSecondsElapsed) {
         super.onManagedUpdate(pSecondsElapsed);
+        agregarPerdiste();
         actulizarPuntos();
         contadorTiempo=contadorTiempo+1;
-        cuentaRegresiva--;
+        if(juegoCorriendo==true){
+            cuentaRegresiva--;
+        }
 
-        if(pausa==false) {
             if (cuentaRegresiva > 170) {
                 sprite3a.setAlpha(1);
             }
@@ -704,29 +812,29 @@ public class EscenaJuego extends EscenaBase {
             if (cuentaRegresiva < 0) {
                 sprite1p.setAlpha(0);
             }
-        }
-        if (pausa==false) {
-            if (cuentaRegresiva < 0) {
+
+
+            if (cuentaRegresiva < 0 && juegoCorriendo==true) {
                 spritePlataformaEntrada.setPosition(spritePlataformaEntrada.getX() - 4, spritePlataformaEntrada.getY());
             }
-        }
+
 
         if (spriteFoquin.collidesWith(spritePlataformaEntrada)) {
             foquinCae2 = false;
-        } else {
+        }
+        else {
             foquinCae2 = true;
         }
-        if (foquinCae2 == true && foquinCae3 == true) {
+        if (foquinCae2 == true && foquinCae3 == true && juegoCorriendo==true) {
             spriteFoquin.setPosition(spriteFoquin.getX(), spriteFoquin.getY() - 12);
             spriteFoquinRojo.setPosition(spriteFoquinRojo.getX(), spriteFoquinRojo.getY() - 12);
             spriteFoquinVerde.setPosition(spriteFoquinVerde.getX(), spriteFoquinVerde.getY() - 12);
             spriteFoquinAzul.setPosition(spriteFoquinAzul.getX(), spriteFoquinAzul.getY() - 12);
         }
-        if(pausa==false) {
-            if (cuentaRegresiva < 0) {
 
-                int colorplataforma =(int) (Math.floor(Math.random() * (6 - 1 + 1)) + 1);
+            if (cuentaRegresiva < 0 &&juegoCorriendo2==true) {
 
+                    int colorplataforma = (int) (Math.floor(Math.random() * (6 - 1 + 1)) + 1);
                 tiempoplataformas += pSecondsElapsed;//tiempo velocidad constante
                 if (tiempoplataformas > LIMITE_TIEMPO) {
                     tiempoplataformas = 0;
@@ -769,7 +877,7 @@ public class EscenaJuego extends EscenaBase {
                     if (colorplataforma == 4) {
                         Sprite spritePlataformaRoja = cargarSprite(ControlJuego.ANCHO_CAMARA + regionPlataformaRoja.getWidth(),
                                 (ControlJuego.ALTO_CAMARA - regionPlataformaRoja.getHeight()) +
-                                        regionPlataformaRoja.getHeight() -400, regionPlataformaRoja);
+                                        regionPlataformaRoja.getHeight() - 400, regionPlataformaRoja);
                         Plataforma nuevoPlataformaRoja = new Plataforma();
                         nuevoPlataformaRoja.setSprite(spritePlataformaRoja);
                         nuevoPlataformaRoja.setColor(1);
@@ -805,42 +913,6 @@ public class EscenaJuego extends EscenaBase {
                         attachChild(nuevoPlataformaAzul.getSpritePlataforma());
 
                     }
-                    if (colorplataforma == 7) {
-                        Sprite spritePlataformaRojaChica = cargarSprite(ControlJuego.ANCHO_CAMARA + regionPlataformaRojaChica.getWidth(),
-                                (ControlJuego.ALTO_CAMARA - regionPlataformaRojaChica.getHeight()) +
-                                        regionPlataformaRojaChica.getHeight() - 600, regionPlataformaRojaChica);
-                        Plataforma nuevoPlataformaRojaChica = new Plataforma();
-                        nuevoPlataformaRojaChica.setSprite(spritePlataformaRojaChica);
-                        nuevoPlataformaRojaChica.setColor(1);
-                        nuevoPlataformaRojaChica.getSpritePlataforma().setColor(0.4f, 0f, 0f);
-                        listaPlataformas.add(nuevoPlataformaRojaChica);
-                        attachChild(nuevoPlataformaRojaChica.getSpritePlataforma());
-
-                    }
-                    if (colorplataforma == 8) {
-                        Sprite spritePlataformaVerdeChica = cargarSprite(ControlJuego.ANCHO_CAMARA + regionPlataformaVerdeChica.getWidth(),
-                                (ControlJuego.ALTO_CAMARA - regionPlataformaVerdeChica.getHeight()) +
-                                        regionPlataformaVerdeChica.getHeight() - 600, regionPlataformaVerdeChica);
-                        Plataforma nuevoPlataformaVerdeChica = new Plataforma();
-                        nuevoPlataformaVerdeChica.setSprite(spritePlataformaVerdeChica);
-                        nuevoPlataformaVerdeChica.setColor(2);
-                        nuevoPlataformaVerdeChica.getSpritePlataforma().setColor(0f, 0.4f, 0f);
-                        listaPlataformas.add(nuevoPlataformaVerdeChica);
-                        attachChild(nuevoPlataformaVerdeChica.getSpritePlataforma());
-
-                    }
-                    if (colorplataforma == 9) {
-                        Sprite spritePlataformaAzulChica = cargarSprite(ControlJuego.ANCHO_CAMARA + regionPlataformaAzulChica.getWidth(),
-                                (ControlJuego.ALTO_CAMARA - regionPlataformaAzulChica.getHeight()) +
-                                        regionPlataformaAzulChica.getHeight() - 600, regionPlataformaAzulChica);
-                        Plataforma nuevoPlataformaAzulChica = new Plataforma();
-                        nuevoPlataformaAzulChica.setSprite(spritePlataformaAzulChica);
-                        nuevoPlataformaAzulChica.setColor(3);
-                        nuevoPlataformaAzulChica.getSpritePlataforma().setColor(0f, 0f, 0.4f);
-                        listaPlataformas.add(nuevoPlataformaAzulChica);
-                        attachChild(nuevoPlataformaAzulChica.getSpritePlataforma());
-
-                    }
                 }
 
                 if (spritePlataformaEntrada.getX() + spritePlataformaEntrada.getWidth() + 80 < 0) {
@@ -849,8 +921,8 @@ public class EscenaJuego extends EscenaBase {
 
                 for (int i = listaPlataformas.size() - 1; i >= 0; i--) {
                     Plataforma plataforma = listaPlataformas.get(i);
-                    if (perdiste == false) {
-                        plataforma.mover(-9, 0);
+                    if (perdiste == false && juegoCorriendo==true) {
+                        plataforma.mover(-8, 0);
                     }
                     if (perdiste == true) {
                         detachChild(plataforma.getSpritePlataforma());
@@ -913,7 +985,7 @@ public class EscenaJuego extends EscenaBase {
                     if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma())) {
                         plataforma.getSpritePlataforma().setColor(1f, 1f, 1f);
                     }
-                    if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma())) {
+                    if (spriteFoquin.collidesWith(plataforma.getSpritePlataforma())&& juegoCorriendo==true) {
                         contadorLuz++;
                     }
 
@@ -924,15 +996,15 @@ public class EscenaJuego extends EscenaBase {
                     }
                 }
             }
-        }
 
-        if (contadorTiempo>350 && perdiste==false){
+
+        if (contadorTiempo>350 && perdiste==false &&juegoCorriendo==true){
             puntos=puntos+1;
         }
         if(perdiste==true){
             txtPuntos.setAlpha(1);
         }
-        if (contadorcolision == 0 && foquinCae3 == false) {
+        if (contadorcolision == 0 && foquinCae3 == false && juegoCorriendo==true) {
             spriteFoquin.setPosition(spriteFoquin.getX(), spriteFoquin.getY() - 12);
             spriteFoquinRojo.setPosition(spriteFoquinRojo.getX(), spriteFoquinRojo.getY() - 12);
             spriteFoquinVerde.setPosition(spriteFoquinVerde.getX(), spriteFoquinVerde.getY() - 12);
@@ -1055,9 +1127,10 @@ public class EscenaJuego extends EscenaBase {
 
         //si la vida de foquin es 0 pierdes
         if (vidaFoquin == 0 && spriteFoquinRojo.getAlpha()==1) {
+
             spriteFoquinCaeRojo.setAlpha(1);
             perdiste=true;
-            spritePantallaPerdiste.setAlpha(1);
+
             spriteFoquin.setAlpha(0);
             spriteFoquinRojo.setAlpha(0);
             spriteFoquinVerde.setAlpha(0);
@@ -1068,9 +1141,10 @@ public class EscenaJuego extends EscenaBase {
             spriteFoquinAzul.setPosition(-300, -300);
         }
         if (vidaFoquin == 0 && spriteFoquinVerde.getAlpha()==1) {
+
             spriteFoquinCaeVerde.setAlpha(1);
             perdiste=true;
-            spritePantallaPerdiste.setAlpha(1);
+
             spriteFoquin.setAlpha(0);
             spriteFoquinRojo.setAlpha(0);
             spriteFoquinVerde.setAlpha(0);
@@ -1081,9 +1155,10 @@ public class EscenaJuego extends EscenaBase {
             spriteFoquinAzul.setPosition(-300, -300);
         }
         if (vidaFoquin == 0 && spriteFoquinAzul.getAlpha()==1) {
+
             spriteFoquinCaeAzul.setAlpha(1);
             perdiste=true;
-            spritePantallaPerdiste.setAlpha(1);
+
             spriteFoquin.setAlpha(0);
             spriteFoquinRojo.setAlpha(0);
             spriteFoquinVerde.setAlpha(0);
@@ -1111,29 +1186,48 @@ public class EscenaJuego extends EscenaBase {
         }
 
         if (spriteFoquin.getY() < 50) {
-            spritePantallaPerdiste.setAlpha(1);
+            juegoCorriendo=false;
+
             perdiste=true;
             spriteFoquin.setAlpha(0);
             spriteFoquinRojo.setAlpha(0);
             spriteFoquinVerde.setAlpha(0);
             spriteFoquinAzul.setAlpha(0);
         }
-
-
+        if(perdiste==true &&cae==0){
+            sonidoCaida.play();
+            cae=1;
+        }
     }
 
     private void actulizarPuntos() {
-        txtPuntos.setText(""+puntos);
+        if(juegoCorriendo==true) {
+            txtPuntos.setText("" + puntos);
+            txtPuntosAlto.setText("" + puntosAlto);
+        }
     }
 
 
     @Override
     public void onBackKeyPressed() {
+        guardarMarcadorAlto();
 
         admEscenas.crearEscenaMenu();
         admEscenas.setEscena(TipoEscena.ESCENA_MENU);
         admEscenas.liberarEscenaJuego();
     }
+    private void guardarMarcadorAlto() {
+        // Abre preferencias y ve si el marcador actual es mayor que el guardado
+        SharedPreferences preferencias = actividadJuego.getSharedPreferences("marcadorAlto", Context.MODE_PRIVATE);
+        int anterior = preferencias.getInt("puntosAlto",0);
+        if (puntos>anterior) {
+            // Nuevo valor mayor, guardarlo
+            SharedPreferences.Editor editor = preferencias.edit();
+            editor.putInt("puntos",puntos);
+            editor.commit();
+        }
+    }
+
 
     @Override
     public TipoEscena getTipoEscena() {
@@ -1184,17 +1278,6 @@ public class EscenaJuego extends EscenaBase {
         regionPlataformaVerde= null;
         regionPlataformaAzul.getTexture().unload();
         regionPlataformaAzul=null;
-        regionPlataformaRojaChica.getTexture().unload();
-        regionPlataformaRojaChica= null;
-        regionPlataformaVerdeChica.getTexture().unload();
-        regionPlataformaVerdeChica= null;
-        regionPlataformaAzulChica.getTexture().unload();
-        regionPlataformaAzulChica=null;
-
-        regionBtnPausa.getTexture().unload();
-        regionBtnPausa=null;
-        regionPantallaPausa.getTexture().unload();
-        regionPantallaPausa=null;
 
         regionLuzA1.getTexture().unload();
         regionLuzA1=null;

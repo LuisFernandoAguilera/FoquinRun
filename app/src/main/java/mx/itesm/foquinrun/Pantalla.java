@@ -1,5 +1,7 @@
 package mx.itesm.foquinrun;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.Menu;
 import android.widget.Switch;
 
@@ -14,7 +16,9 @@ import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.entity.text.Text;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.opengl.font.IFont;
 import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
@@ -43,6 +47,8 @@ public class Pantalla extends EscenaBase {
 
     private AnimatedSprite spriteFoquin;
     private TiledTextureRegion regionFoquin;
+    private AnimatedSprite spriteFoquinB;
+    private TiledTextureRegion regionFoquinB;
 
     private ITextureRegion regionBtnJugar;
     private ITextureRegion regionBtnSonido;
@@ -60,6 +66,15 @@ public class Pantalla extends EscenaBase {
 
     private ITextureRegion regionMundo;
     private Sprite spriteMundo;
+
+    private ITextureRegion regionPuntosMax;
+    private Sprite spritePuntosMax;
+
+    private int imagen=1;
+
+    private Text txtMarcador;
+    private IFont fontMonster;
+
 
 
     @Override
@@ -79,12 +94,18 @@ public class Pantalla extends EscenaBase {
 
         regionMundo= cargarImagen("Pantalla/mundo gira sin transparencia.png");
 
+        regionPuntosMax=cargarImagen("Pantalla/PuntosMax.png");
+
         regionFlechaDerecha= cargarImagen("Pantalla/flechaderecha.png");
         regionFlechaIzquierda= cargarImagen("Pantalla/flechaizquierda.png");
 
         regionPersonajes= cargarImagen("Pantalla/Personajes.png");
 
-        regionFoquin= cargarImagenMosaico("EscenaJuego/Foquin.png", 1000, 280, 1, 5);
+        regionFoquin= cargarImagenMosaico("EscenaJuego/FoquinAzul.png", 1000, 280, 1, 5);
+        regionFoquinB= cargarImagenMosaico("Pantalla/FoquinBloqueado.png", 1000, 280, 1, 5);
+
+        fontMonster = cargarFont("fonts/monster.ttf", 64, 0xFFFFFF00, "0123456789");
+
     }
 
 
@@ -104,12 +125,16 @@ public class Pantalla extends EscenaBase {
         attachChild(spriteFondoFrente);
 
 
-        spriteMundo=cargarSprite(ControlJuego.ALTO_CAMARA/2+600, ControlJuego.ALTO_CAMARA/2, regionMundo);
+        spriteMundo=cargarSprite(ControlJuego.ALTO_CAMARA/2+600, ControlJuego.ALTO_CAMARA/2+100, regionMundo);
         attachChild(spriteMundo);
 
-        spritePersonajes=cargarSprite(ControlJuego.ANCHO_CAMARA/2, ControlJuego.ALTO_CAMARA/2, regionPersonajes);
+        spritePuntosMax=cargarSprite(ControlJuego.ALTO_CAMARA/2+600, ControlJuego.ALTO_CAMARA/2-250, regionPuntosMax);
+        attachChild(spritePuntosMax);
+        spritePuntosMax.setScale(1.3f);
+
+        spritePersonajes=cargarSprite(ControlJuego.ANCHO_CAMARA / 2, ControlJuego.ALTO_CAMARA / 2, regionPersonajes);
         attachChild(spritePersonajes);
-        spritePersonajes.setPosition(340,600);
+        spritePersonajes.setPosition(340, 600);
 
         spriteFoquin = new AnimatedSprite(ControlJuego.ALTO_CAMARA / 2,
                 ControlJuego.ALTO_CAMARA / 2, regionFoquin,
@@ -117,9 +142,27 @@ public class Pantalla extends EscenaBase {
         spriteFoquin.animate(100);
         attachChild(spriteFoquin);
         spriteFoquin.setPosition(350, 300);
+        spriteFoquinB = new AnimatedSprite(ControlJuego.ALTO_CAMARA / 2,
+                ControlJuego.ALTO_CAMARA / 2, regionFoquinB,
+                actividadJuego.getVertexBufferObjectManager());
+        spriteFoquinB.animate(100);
+        attachChild(spriteFoquinB);
+        spriteFoquinB.setPosition(350, 300);
+        spriteFoquinB.setAlpha(0);
 
 
         agregarMenu();
+        agregarMarcadorAlto();
+    }
+    private void agregarMarcadorAlto() {
+        // Obtener de las preferencias el marcador mayor
+        SharedPreferences preferencias = actividadJuego.getSharedPreferences("marcadorAlto", Context.MODE_PRIVATE);
+        int puntos = preferencias.getInt("puntos",0);
+
+        txtMarcador = new Text(ControlJuego.ANCHO_CAMARA/2,ControlJuego.ALTO_CAMARA-80,
+                fontMonster,""+puntos,actividadJuego.getVertexBufferObjectManager());
+        attachChild(txtMarcador);
+        txtMarcador.setPosition(925,105);
     }
 
     private void agregarMenu() {
@@ -149,7 +192,9 @@ public class Pantalla extends EscenaBase {
         opcionJugar.setPosition(-300, -330);
         opcionSonido.setPosition(-550, 360);
         opcionMusica.setPosition(-460, 360);
-        opcionFlechaD.setPosition(-100,-100);
+        opcionSonido.setAlpha(0);
+        opcionMusica.setAlpha(0);
+        opcionFlechaD.setPosition(-100, -100);
         opcionFlechaI.setPosition(-500,-100);
 
 
@@ -176,11 +221,11 @@ public class Pantalla extends EscenaBase {
 
                         break;
                     case OPCION_FLECHAD:
-
+                        imagen++;
 
                         break;
                     case OPCION_FLECHAI:
-
+                        imagen--;
 
                         break;
 
@@ -194,7 +239,20 @@ public class Pantalla extends EscenaBase {
     @Override
     protected void onManagedUpdate(float pSecondsElapsed) {
         super.onManagedUpdate(pSecondsElapsed);
-
+        if(imagen==1){
+            spriteFoquin.setAlpha(1);
+            spriteFoquinB.setAlpha(0);
+        }
+        if(imagen==2){
+            spriteFoquin.setAlpha(0);
+            spriteFoquinB.setAlpha(1);
+        }
+        if(imagen<0){
+            imagen=0;
+        }
+        if(imagen>2){
+            imagen=2;
+        }
     }
     @Override
     public void onBackKeyPressed() {
