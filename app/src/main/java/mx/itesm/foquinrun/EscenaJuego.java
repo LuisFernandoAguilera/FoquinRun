@@ -584,7 +584,7 @@ public class EscenaJuego extends EscenaBase {
                 fontMonster,"0          ",actividadJuego.getVertexBufferObjectManager());
         attachChild(txtPuntos);
         txtPuntos.setAlpha(0);
-        txtPuntos.setPosition(780,275);
+        txtPuntos.setPosition(790,275);
     }
 
     private void agregarPerdiste() {
